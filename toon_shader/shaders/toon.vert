@@ -5,6 +5,7 @@ layout (location = 1) in vec3 VertexNormal;
 layout (location = 2) in vec2 VertexTexCoord;
 
 out float ToonCoord;
+out vec2 TexCoord;
 
 uniform mat4 WorldMatrix;
 uniform mat4 ViewProjMatrix;
@@ -20,6 +21,7 @@ void main()
     vec3 viewDir = normalize(EyePosition - worldPosition);
 
     ToonCoord = clamp(dot(worldNormal, viewDir), 0.0, 1.0);
+    TexCoord = VertexTexCoord;
 
     gl_Position = ViewProjMatrix * vec4(worldPosition, 1.0);
 }

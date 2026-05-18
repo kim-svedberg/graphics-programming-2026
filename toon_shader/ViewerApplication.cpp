@@ -206,9 +206,9 @@ void ViewerApplication::InitializeModel()
         m_model.GetMaterial(i).SetUniformValue("ToonRamp", toonRamp);
     }
 
-    //m_model.GetMaterial(0).SetUniformValue("ColorTexture", textureLoader.LoadShared("C:\\Users\\kimas\\OneDrive\\Documents\\GitHub\\graphics-programming-project\\graphics-programming-2026\\toon_shader\\models/mill/Ground_shadow.jpg"));
-    //m_model.GetMaterial(1).SetUniformValue("ColorTexture", textureLoader.LoadShared("C:\\Users\\kimas\\OneDrive\\Documents\\GitHub\\graphics-programming-project\\graphics-programming-2026\\toon_shader\\models/mill/Ground_color.jpg"));
-    //m_model.GetMaterial(2).SetUniformValue("ColorTexture", textureLoader.LoadShared("C:\\Users\\kimas\\OneDrive\\Documents\\GitHub\\graphics-programming-project\\graphics-programming-2026\\toon_shader\\models/mill/MillCat_color.jpg"));
+    m_model.GetMaterial(0).SetUniformValue("ColorTexture", textureLoader.LoadShared("C:\\Users\\kimas\\OneDrive\\Documents\\GitHub\\graphics-programming-project\\graphics-programming-2026\\toon_shader\\models/mill/Ground_shadow.jpg"));
+    m_model.GetMaterial(1).SetUniformValue("ColorTexture", textureLoader.LoadShared("C:\\Users\\kimas\\OneDrive\\Documents\\GitHub\\graphics-programming-project\\graphics-programming-2026\\toon_shader\\models/mill/Ground_color.jpg"));
+    m_model.GetMaterial(2).SetUniformValue("ColorTexture", textureLoader.LoadShared("C:\\Users\\kimas\\OneDrive\\Documents\\GitHub\\graphics-programming-project\\graphics-programming-2026\\toon_shader\\models/mill/MillCat_color.jpg"));
     
 }
 

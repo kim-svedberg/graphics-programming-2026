@@ -9,7 +9,7 @@ out vec2 TexCoord;
 
 uniform mat4 WorldMatrix;
 uniform mat4 ViewProjMatrix;
-uniform vec3 EyePosition;
+uniform vec3 LightPosition;
 
 void main()
 {
@@ -18,9 +18,10 @@ void main()
     mat3 normalMatrix = transpose(inverse(mat3(WorldMatrix)));
     vec3 worldNormal = normalize(normalMatrix * VertexNormal);
 
-    vec3 viewDir = normalize(EyePosition - worldPosition);
+    vec3 lightDir = normalize(LightPosition - worldPosition);
 
-    ToonCoord = clamp(dot(worldNormal, viewDir), 0.0, 1.0);
+    ToonCoord = max(dot(worldNormal, lightDir), 0.0);
+
     TexCoord = VertexTexCoord;
 
     gl_Position = ViewProjMatrix * vec4(worldPosition, 1.0);

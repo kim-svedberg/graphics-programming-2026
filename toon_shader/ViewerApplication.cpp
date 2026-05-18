@@ -187,7 +187,7 @@ void ViewerApplication::InitializeModel()
     //m_model.GetMaterial(2).SetUniformValue("ToonRamp", toonRampTexture);
 
     //5.2 Generate one ramp per material 
-    /*for (size_t i = 0; i < m_model.GetMaterialCount(); i++)
+    for (size_t i = 0; i < m_model.GetMaterialCount(); i++)
     {
         glm::vec3 baseColor(1.0f);
 
@@ -204,10 +204,10 @@ void ViewerApplication::InitializeModel()
         auto toonRamp = CreateToonRampTexture(shadowColor, litColor);
 
         m_model.GetMaterial(i).SetUniformValue("ToonRamp", toonRamp);
-    }*/
+    }
 
     // Load custom purple/pink toon ramp
-    auto toonRampTexture = textureLoader.LoadShared(
+    /*auto toonRampTexture = textureLoader.LoadShared(
         "C:\\Users\\kimas\\OneDrive\\Documents\\GitHub\\graphics-programming-project\\graphics-programming-2026\\toon_shader\\models/mill/toon_ramp_2.png"
     );
     
@@ -217,7 +217,7 @@ void ViewerApplication::InitializeModel()
             "ToonRamp",
             toonRampTexture
         );
-    }
+    }*/
 
     m_model.GetMaterial(0).SetUniformValue("ColorTexture", textureLoader.LoadShared("C:\\Users\\kimas\\OneDrive\\Documents\\GitHub\\graphics-programming-project\\graphics-programming-2026\\toon_shader\\models/mill/Ground_shadow.jpg"));
     m_model.GetMaterial(1).SetUniformValue("ColorTexture", textureLoader.LoadShared("C:\\Users\\kimas\\OneDrive\\Documents\\GitHub\\graphics-programming-project\\graphics-programming-2026\\toon_shader\\models/mill/Ground_color.jpg"));

@@ -81,6 +81,44 @@ void ViewerApplication::Cleanup()
     Application::Cleanup();
 }
 
+std::shared_ptr<Texture2DObject> CreateToonRampTexture(
+    const glm::vec3& shadowColor,
+    const glm::vec3& litColor)
+{
+    auto texture = std::make_shared<Texture2DObject>();
+
+    std::vector<std::byte> pixels =
+    {
+    std::byte(static_cast<unsigned char>(glm::clamp(shadowColor.r, 0.0f, 1.0f) * 255.0f)),
+    std::byte(static_cast<unsigned char>(glm::clamp(shadowColor.g, 0.0f, 1.0f) * 255.0f)),
+    std::byte(static_cast<unsigned char>(glm::clamp(shadowColor.b, 0.0f, 1.0f) * 255.0f)),
+    std::byte(255),
+
+    std::byte(static_cast<unsigned char>(glm::clamp(litColor.r, 0.0f, 1.0f) * 255.0f)),
+    std::byte(static_cast<unsigned char>(glm::clamp(litColor.g, 0.0f, 1.0f) * 255.0f)),
+    std::byte(static_cast<unsigned char>(glm::clamp(litColor.b, 0.0f, 1.0f) * 255.0f)),
+    std::byte(255)
+    };
+
+    texture->Bind();
+
+    texture->SetImage(
+    0,
+    2,
+    1,
+    TextureObject::FormatRGBA,
+    TextureObject::InternalFormatRGBA8,
+    std::span<const std::byte>(pixels),
+    Data::Type::UByte);
+
+    texture->SetParameter(TextureObject::ParameterEnum::MinFilter, GL_NEAREST);
+    texture->SetParameter(TextureObject::ParameterEnum::MagFilter, GL_NEAREST);
+    texture->SetParameter(TextureObject::ParameterEnum::WrapS, GL_CLAMP_TO_EDGE);
+    texture->SetParameter(TextureObject::ParameterEnum::WrapT, GL_CLAMP_TO_EDGE);
+
+    return texture;
+}
+
 void ViewerApplication::InitializeModel()
 {
     // Load and build shader
@@ -141,12 +179,32 @@ void ViewerApplication::InitializeModel()
     Texture2DLoader textureLoader(TextureObject::FormatRGBA, TextureObject::InternalFormatRGBA8);
     textureLoader.SetFlipVertical(true);
     
-    //Load toon ramp texture
-    auto toonRampTexture = textureLoader.LoadShared(
-    ("C:\\Users\\kimas\\OneDrive\\Documents\\GitHub\\graphics-programming-project\\graphics-programming-2026\\toon_shader\\models\\mill\\toon_ramp_2.png"));
-    m_model.GetMaterial(0).SetUniformValue("ToonRamp", toonRampTexture);
-    m_model.GetMaterial(1).SetUniformValue("ToonRamp", toonRampTexture);
-    m_model.GetMaterial(2).SetUniformValue("ToonRamp", toonRampTexture);
+    //5.1 Load toon ramp texture
+    //auto toonRampTexture = textureLoader.LoadShared(
+    //("C:\\Users\\kimas\\OneDrive\\Documents\\GitHub\\graphics-programming-project\\graphics-programming-2026\\toon_shader\\models\\mill\\toon_ramp_2.png"));
+    //m_model.GetMaterial(0).SetUniformValue("ToonRamp", toonRampTexture);
+    //m_model.GetMaterial(1).SetUniformValue("ToonRamp", toonRampTexture);
+    //m_model.GetMaterial(2).SetUniformValue("ToonRamp", toonRampTexture);
+
+    //5.2 Generate one ramp per material 
+    for (size_t i = 0; i < m_model.GetMaterialCount(); i++)
+    {
+        glm::vec3 baseColor(1.0f);
+
+        if (i == 0) {
+            baseColor = glm::vec3(0.35f, 0.35f, 0.35f); } // shadow ground
+        else if (i == 1) { 
+            baseColor = glm::vec3(0.4f, 0.8f, 0.35f); }// grass/ground
+        else if (i == 2) { 
+            baseColor = glm::vec3(0.8f, 0.65f, 0.45f); } // mill
+
+        glm::vec3 shadowColor = baseColor * 0.35f;
+        glm::vec3 litColor = glm::min(baseColor * 1.25f, glm::vec3(1.0f));
+
+        auto toonRamp = CreateToonRampTexture(shadowColor, litColor);
+
+        m_model.GetMaterial(i).SetUniformValue("ToonRamp", toonRamp);
+    }
 
     //m_model.GetMaterial(0).SetUniformValue("ColorTexture", textureLoader.LoadShared("C:\\Users\\kimas\\OneDrive\\Documents\\GitHub\\graphics-programming-project\\graphics-programming-2026\\toon_shader\\models/mill/Ground_shadow.jpg"));
     //m_model.GetMaterial(1).SetUniformValue("ColorTexture", textureLoader.LoadShared("C:\\Users\\kimas\\OneDrive\\Documents\\GitHub\\graphics-programming-project\\graphics-programming-2026\\toon_shader\\models/mill/Ground_color.jpg"));

@@ -7,6 +7,7 @@
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtx/transform.hpp>
 #include <imgui.h>
+#include <stb_image.h> 
 
 ViewerApplication::ViewerApplication()
     : Application(1024, 1024, "Viewer demo")
@@ -76,6 +77,44 @@ void ViewerApplication::Cleanup()
     m_imGui.Cleanup();
 
     Application::Cleanup();
+}
+
+glm::vec3 SampleAverageTextureColor(const char* path)
+{
+    int width = 0;
+    int height = 0;
+    int channels = 0;
+
+    stbi_set_flip_vertically_on_load(true);
+
+    unsigned char* data = stbi_load(path, &width, &height, &channels, 4);
+
+    if (!data)
+    {
+        return glm::vec3(1.0f); // fallback white
+    }
+
+    glm::vec3 averageColor(0.0f);
+    int pixelCount = width * height;
+
+    for (int i = 0; i < pixelCount; i++)
+    {
+        int index = i * 4;
+
+        glm::vec3 pixelColor(
+            data[index + 0] / 255.0f,
+            data[index + 1] / 255.0f,
+            data[index + 2] / 255.0f
+        );
+
+        averageColor += pixelColor;
+    }
+
+    averageColor /= float(pixelCount);
+
+    stbi_image_free(data);
+
+    return averageColor;
 }
 
 std::shared_ptr<Texture2DObject> CreateToonRampTexture(
@@ -205,50 +244,32 @@ void ViewerApplication::InitializeModel()
     textureLoader.SetFlipVertical(true);
     
     //5.1 Load toon ramp texture
-    //auto toonRampTexture = textureLoader.LoadShared(
-    //("C:\\Users\\kimas\\OneDrive\\Documents\\GitHub\\graphics-programming-project\\graphics-programming-2026\\toon_shader\\models\\mill\\toon_ramp_2.png"));
-    //m_model.GetMaterial(0).SetUniformValue("ToonRamp", toonRampTexture);
-    //m_model.GetMaterial(1).SetUniformValue("ToonRamp", toonRampTexture);
-    //m_model.GetMaterial(2).SetUniformValue("ToonRamp", toonRampTexture);
+    std::vector<std::string> texturePaths =
+    {
+        "models/mill/Ground_shadow.jpg",
+        "models/mill/Ground_color.jpg",
+        "models/mill/MillCat_color.jpg"
+    };
 
-    //5.2 Generate one ramp per material 
     for (size_t i = 0; i < m_model.GetMaterialCount(); i++)
     {
-        glm::vec3 baseColor(1.0f);
+        const std::string& texturePath = texturePaths[i];
 
-        if (i == 0) {
-            baseColor = glm::vec3(0.35f, 0.35f, 0.35f); } // shadow ground
-        else if (i == 1) { 
-            baseColor = glm::vec3(0.4f, 0.8f, 0.35f); }// grass/ground
-        else if (i == 2) { 
-            baseColor = glm::vec3(0.8f, 0.65f, 0.45f); } // mill
+        auto colorTexture = textureLoader.LoadShared(texturePath.c_str());
+
+        glm::vec3 baseColor = SampleAverageTextureColor(texturePath.c_str());
 
         glm::vec3 shadowColor = baseColor * 0.35f;
         glm::vec3 litColor = glm::min(baseColor * 1.25f, glm::vec3(1.0f));
 
         auto toonRamp = CreateToonRampTexture(shadowColor, litColor);
 
+        m_model.GetMaterial(i).SetUniformValue("ColorTexture", colorTexture);
         m_model.GetMaterial(i).SetUniformValue("ToonRamp", toonRamp);
     }
 
-    // Load custom purple/pink toon ramp
-    /*auto toonRampTexture = textureLoader.LoadShared(
-        "C:\\Users\\kimas\\OneDrive\\Documents\\GitHub\\graphics-programming-project\\graphics-programming-2026\\toon_shader\\models/mill/toon_ramp_2.png"
-    );
-    
-    for (size_t i = 0; i < m_model.GetMaterialCount(); i++)
-    {
-        m_model.GetMaterial(i).SetUniformValue(
-            "ToonRamp",
-            toonRampTexture
-        );
-    }*/
-
-    m_model.GetMaterial(0).SetUniformValue("ColorTexture", textureLoader.LoadShared("models/mill/Ground_shadow.jpg"));
-    m_model.GetMaterial(1).SetUniformValue("ColorTexture", textureLoader.LoadShared("models/mill/Ground_color.jpg"));
-    m_model.GetMaterial(2).SetUniformValue("ColorTexture", textureLoader.LoadShared("models/mill/MillCat_color.jpg"));
-    
 }
+    
 
 void ViewerApplication::InitializeCamera()
 {

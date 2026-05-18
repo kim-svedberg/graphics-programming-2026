@@ -278,15 +278,15 @@ void ViewerApplication::RenderGUI()
 
     ImGui::Text("Lighting");
     ImGui::DragFloat3("Light position", &m_lightPosition[0], 0.1f);
-    ImGui::ColorEdit3("Light color", &m_lightColor[0]);
-    ImGui::DragFloat("Light intensity", &m_lightIntensity, 0.05f, 0.0f, 10.0f);
+    /*ImGui::ColorEdit3("Light color", &m_lightColor[0]);
+    ImGui::DragFloat("Light intensity", &m_lightIntensity, 0.05f, 0.0f, 10.0f);*/
 
     ImGui::Separator();
 
     ImGui::Text("Toon Ramp");
     ImGui::Checkbox("Use material-based ramps", &m_useMaterialColorRamps);
-    ImGui::DragFloat("Shadow strength", &m_toonShadowStrength, 0.01f, 0.0f, 1.0f);
-    ImGui::DragFloat("Highlight strength", &m_toonHighlightStrength, 0.01f, 1.0f, 3.0f);
+    /*ImGui::DragFloat("Shadow strength", &m_toonShadowStrength, 0.01f, 0.0f, 1.0f);
+    ImGui::DragFloat("Highlight strength", &m_toonHighlightStrength, 0.01f, 1.0f, 3.0f);*/
 
     if (!m_useMaterialColorRamps)
     {

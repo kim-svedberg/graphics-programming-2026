@@ -4,17 +4,22 @@ layout (location = 0) in vec3 VertexPosition;
 layout (location = 1) in vec3 VertexNormal;
 layout (location = 2) in vec2 VertexTexCoord;
 
-out vec3 WorldPosition;
-out vec3 WorldNormal;
-out vec2 TexCoord;
+out float ToonCoord;
 
 uniform mat4 WorldMatrix;
 uniform mat4 ViewProjMatrix;
+uniform vec3 EyePosition;
 
 void main()
 {
-	WorldPosition = (WorldMatrix * vec4(VertexPosition, 1.0)).xyz;
-	WorldNormal = normalize((WorldMatrix * vec4(VertexNormal, 0.0)).xyz);
-	TexCoord = VertexTexCoord;
-	gl_Position = ViewProjMatrix * vec4(WorldPosition, 1.0);
+    vec3 worldPosition = (WorldMatrix * vec4(VertexPosition, 1.0)).xyz;
+
+    mat3 normalMatrix = transpose(inverse(mat3(WorldMatrix)));
+    vec3 worldNormal = normalize(normalMatrix * VertexNormal);
+
+    vec3 viewDir = normalize(EyePosition - worldPosition);
+
+    ToonCoord = clamp(dot(worldNormal, viewDir), 0.0, 1.0);
+
+    gl_Position = ViewProjMatrix * vec4(worldPosition, 1.0);
 }

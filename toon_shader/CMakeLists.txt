@@ -1,8 +1,9 @@
+set(TARGETNAME toon_shader)
 
 set(libraries glad glfw assimp imgui itugl ${APPLE_LIBRARIES})
 
-file(GLOB_RECURSE target_inc "*.h" )
-file(GLOB_RECURSE target_src "*.cpp" )
+file(GLOB_RECURSE target_inc "*.h")
+file(GLOB_RECURSE target_src "*.cpp")
 
 file(GLOB_RECURSE shaders "*.vert" "*.frag" "*.geom" "*.glsl")
 source_group("Shaders" FILES ${shaders})

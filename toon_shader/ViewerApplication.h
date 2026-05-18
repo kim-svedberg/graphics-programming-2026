@@ -28,6 +28,9 @@ private:
 
     void RenderGUI();
 
+    void RebuildToonRamps();
+
+
 private:
     // Helper object for debug GUI
     DearImGui m_imGui;
@@ -54,4 +57,11 @@ private:
 
     // Specular exponent debug
     float m_specularExponentGrass;
+
+    // Variables for toon shading 
+    glm::vec3 m_toonShadowColor = glm::vec3(0.15f);
+    glm::vec3 m_toonLitColor = glm::vec3(1.0f);
+    float m_toonShadowStrength = 0.35f;
+    float m_toonHighlightStrength = 1.25f;
+    bool m_useMaterialColorRamps = true;
 };

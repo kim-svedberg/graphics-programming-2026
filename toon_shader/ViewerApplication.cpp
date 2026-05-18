@@ -47,9 +47,6 @@ void ViewerApplication::Update()
     // Update camera controller
     UpdateCamera();
 
-    // Update specular exponent for grass material
-    //m_model.GetMaterial(1).SetUniformValue("SpecularExponent", m_specularExponentGrass);
-
     //Update eye position for all materials for toon shader
     for (int i = 0; i < m_model.GetMaterialCount(); i++)
 {
@@ -119,12 +116,40 @@ std::shared_ptr<Texture2DObject> CreateToonRampTexture(
     return texture;
 }
 
+void ViewerApplication::RebuildToonRamps()
+{
+    for (size_t i = 0; i < m_model.GetMaterialCount(); i++)
+    {
+        glm::vec3 baseColor(1.0f);
+
+        if (i == 0)
+            baseColor = glm::vec3(0.35f);
+        else if (i == 1)
+            baseColor = glm::vec3(0.4f, 0.8f, 0.35f);
+        else if (i == 2)
+            baseColor = glm::vec3(0.8f, 0.65f, 0.45f);
+
+        glm::vec3 shadowColor;
+        glm::vec3 litColor;
+
+        if (m_useMaterialColorRamps)
+        {
+            shadowColor = baseColor * m_toonShadowStrength;
+            litColor = glm::min(baseColor * m_toonHighlightStrength, glm::vec3(1.0f));
+        }
+        else
+        {
+            shadowColor = m_toonShadowColor;
+            litColor = m_toonLitColor;
+        }
+
+        auto toonRamp = CreateToonRampTexture(shadowColor, litColor);
+        m_model.GetMaterial(i).SetUniformValue("ToonRamp", toonRamp);
+    }
+}
+
 void ViewerApplication::InitializeModel()
 {
-    // Load and build shader
-    //Shader vertexShader = ShaderLoader::Load(Shader::VertexShader, "C:\\Users\\kimas\\OneDrive\\Documents\\GitHub\\graphics-programming-project\\graphics-programming-2026\\toon_shader\\shaders/blinn-phong.vert");
-    //Shader fragmentShader = ShaderLoader::Load(Shader::FragmentShader, "C:\\Users\\kimas\\OneDrive\\Documents\\GitHub\\graphics-programming-project\\graphics-programming-2026\\toon_shader\\shaders/blinn-phong.frag");
-    
     //Load and build toon shader 
     Shader vertexShader = ShaderLoader::Load(Shader::VertexShader, "shaders/toon.vert");
     Shader fragmentShader = ShaderLoader::Load(Shader::FragmentShader, "shaders/toon.frag");
@@ -248,14 +273,36 @@ void ViewerApplication::RenderGUI()
 {
     m_imGui.BeginFrame();
 
-    // Add debug controls for light properties
-    ImGui::ColorEdit3("Ambient color", &m_ambientColor[0]);
+    ImGui::Text("Toon Shader Controls");
     ImGui::Separator();
+
+    ImGui::Text("Lighting");
     ImGui::DragFloat3("Light position", &m_lightPosition[0], 0.1f);
     ImGui::ColorEdit3("Light color", &m_lightColor[0]);
-    ImGui::DragFloat("Light intensity", &m_lightIntensity, 0.05f, 0.0f, 100.0f);
+    ImGui::DragFloat("Light intensity", &m_lightIntensity, 0.05f, 0.0f, 10.0f);
+
     ImGui::Separator();
-    ImGui::DragFloat("Specular exponent (grass)", &m_specularExponentGrass, 1.0f, 0.0f, 1000.0f);
+
+    ImGui::Text("Toon Ramp");
+    ImGui::Checkbox("Use material-based ramps", &m_useMaterialColorRamps);
+    ImGui::DragFloat("Shadow strength", &m_toonShadowStrength, 0.01f, 0.0f, 1.0f);
+    ImGui::DragFloat("Highlight strength", &m_toonHighlightStrength, 0.01f, 1.0f, 3.0f);
+
+    if (!m_useMaterialColorRamps)
+    {
+        ImGui::ColorEdit3("Shadow color", &m_toonShadowColor[0]);
+        ImGui::ColorEdit3("Lit color", &m_toonLitColor[0]);
+    }
+
+    ImGui::Separator();
+
+    ImGui::Text("Debug");
+    ImGui::Text("Current mode: %s", m_useMaterialColorRamps ? "Material ramps" : "Custom ramp");
+    ImGui::Text("Toon coordinate: max(dot(N, L), 0)");
+
+    if(ImGui::Button("Rebuild Toon Ramps")){
+        RebuildToonRamps();
+    }
 
     m_imGui.EndFrame();
 }

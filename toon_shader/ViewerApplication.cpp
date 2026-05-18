@@ -126,8 +126,8 @@ void ViewerApplication::InitializeModel()
     //Shader fragmentShader = ShaderLoader::Load(Shader::FragmentShader, "C:\\Users\\kimas\\OneDrive\\Documents\\GitHub\\graphics-programming-project\\graphics-programming-2026\\toon_shader\\shaders/blinn-phong.frag");
     
     //Load and build toon shader 
-    Shader vertexShader = ShaderLoader::Load(Shader::VertexShader, "C:\\Users\\kimas\\OneDrive\\Documents\\GitHub\\graphics-programming-project\\graphics-programming-2026\\toon_shader\\shaders/toon.vert");
-    Shader fragmentShader = ShaderLoader::Load(Shader::FragmentShader, "C:\\Users\\kimas\\OneDrive\\Documents\\GitHub\\graphics-programming-project\\graphics-programming-2026\\toon_shader\\shaders/toon.frag");
+    Shader vertexShader = ShaderLoader::Load(Shader::VertexShader, "shaders/toon.vert");
+    Shader fragmentShader = ShaderLoader::Load(Shader::FragmentShader, "shaders/toon.frag");
     std::shared_ptr<ShaderProgram> shaderProgram = std::make_shared<ShaderProgram>();
     shaderProgram->Build(vertexShader, fragmentShader);
 
@@ -173,7 +173,7 @@ void ViewerApplication::InitializeModel()
     loader.SetMaterialAttribute(VertexAttribute::Semantic::TexCoord0, "VertexTexCoord");
 
     // Load model
-    m_model = loader.Load("C:\\Users\\kimas\\OneDrive\\Documents\\GitHub\\graphics-programming-project\\graphics-programming-2026\\toon_shader\\models/mill/Mill.obj");
+    m_model = loader.Load("models/mill/Mill.obj");
 
     // Load and set textures
     Texture2DLoader textureLoader(TextureObject::FormatRGBA, TextureObject::InternalFormatRGBA8);
@@ -219,9 +219,9 @@ void ViewerApplication::InitializeModel()
         );
     }*/
 
-    m_model.GetMaterial(0).SetUniformValue("ColorTexture", textureLoader.LoadShared("C:\\Users\\kimas\\OneDrive\\Documents\\GitHub\\graphics-programming-project\\graphics-programming-2026\\toon_shader\\models/mill/Ground_shadow.jpg"));
-    m_model.GetMaterial(1).SetUniformValue("ColorTexture", textureLoader.LoadShared("C:\\Users\\kimas\\OneDrive\\Documents\\GitHub\\graphics-programming-project\\graphics-programming-2026\\toon_shader\\models/mill/Ground_color.jpg"));
-    m_model.GetMaterial(2).SetUniformValue("ColorTexture", textureLoader.LoadShared("C:\\Users\\kimas\\OneDrive\\Documents\\GitHub\\graphics-programming-project\\graphics-programming-2026\\toon_shader\\models/mill/MillCat_color.jpg"));
+    m_model.GetMaterial(0).SetUniformValue("ColorTexture", textureLoader.LoadShared("models/mill/Ground_shadow.jpg"));
+    m_model.GetMaterial(1).SetUniformValue("ColorTexture", textureLoader.LoadShared("models/mill/Ground_color.jpg"));
+    m_model.GetMaterial(2).SetUniformValue("ColorTexture", textureLoader.LoadShared("models/mill/MillCat_color.jpg"));
     
 }
 

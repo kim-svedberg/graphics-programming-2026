@@ -8,6 +8,7 @@
 #include <glm/gtx/transform.hpp>
 #include <imgui.h>
 #include <stb_image.h> 
+#include <fstream>
 
 ViewerApplication::ViewerApplication()
     : Application(1024, 1024, "Viewer demo")
@@ -262,6 +263,9 @@ void ViewerApplication::InitializeModel()
         m_model.GetMaterial(i).SetUniformValue("ToonRamp", toonRamp);
     }
 
+    //Load user-set settings
+    LoadSettings();
+
 }
     
 
@@ -282,6 +286,77 @@ void ViewerApplication::InitializeLights()
     m_lightColor = glm::vec3(1.0f);
     m_lightIntensity = 1.0f;
     m_lightPosition = glm::vec3(-10.0f, 20.0f, 10.0f);
+}
+
+void ViewerApplication::SaveSettings()
+{
+    std::ofstream file("toon_settings.txt");
+
+    if (!file.is_open())
+    {
+        return;
+    }
+
+    file << m_useMaterialColorRamps << "\n";
+
+    file << m_toonShadowStrength << "\n";
+    file << m_toonHighlightStrength << "\n";
+
+    file << m_toonShadowColor.r << " "
+         << m_toonShadowColor.g << " "
+         << m_toonShadowColor.b << "\n";
+
+    file << m_toonLitColor.r << " "
+         << m_toonLitColor.g << " "
+         << m_toonLitColor.b << "\n";
+
+    file << m_lightPosition.x << " "
+         << m_lightPosition.y << " "
+         << m_lightPosition.z << "\n";
+}
+
+void ViewerApplication::LoadSettings()
+{
+    std::ifstream file("toon_settings.txt");
+
+    if (!file.is_open())
+    {
+        return;
+    }
+
+    file >> m_useMaterialColorRamps;
+
+    file >> m_toonShadowStrength;
+    file >> m_toonHighlightStrength;
+
+    file >> m_toonShadowColor.r
+         >> m_toonShadowColor.g
+         >> m_toonShadowColor.b;
+
+    file >> m_toonLitColor.r
+         >> m_toonLitColor.g
+         >> m_toonLitColor.b;
+
+    file >> m_lightPosition.x
+         >> m_lightPosition.y
+         >> m_lightPosition.z;
+
+    RebuildToonRamps();
+}
+
+void ViewerApplication::ResetSettings()
+{
+    m_useMaterialColorRamps = true;
+
+    m_toonShadowStrength = 0.5f;
+    m_toonHighlightStrength = 1.5f;
+
+    m_toonShadowColor = glm::vec3(0.2f);
+    m_toonLitColor = glm::vec3(1.0f);
+
+    m_lightPosition = glm::vec3(0.0f, 5.0f, 0.0f);
+
+    RebuildToonRamps();
 }
 
 void ViewerApplication::RenderGUI()
@@ -332,6 +407,20 @@ void ViewerApplication::RenderGUI()
     if (rampChanged)
     {
         RebuildToonRamps();
+    }
+
+    ImGui::Separator();
+
+    if (ImGui::Button("Save Settings"))
+    {
+        SaveSettings();
+    }
+
+    ImGui::SameLine();
+
+    if (ImGui::Button("Reset Defaults"))
+    {
+        ResetSettings();
     }
 
     ImGui::Separator();

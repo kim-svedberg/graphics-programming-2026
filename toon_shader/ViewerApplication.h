@@ -29,6 +29,9 @@ private:
     void RenderGUI();
 
     void RebuildToonRamps();
+    void SaveSettings();
+    void LoadSettings();
+    void ResetSettings();
 
 
 private:
@@ -65,4 +68,18 @@ private:
     float m_toonShadowStrength = 0.35f;
     float m_toonHighlightStrength = 1.25f;
     bool m_useMaterialColorRamps = true;
+
+private:
+    struct ToonSettings
+    {
+        bool useMaterialColorRamps = true;
+
+        float toonShadowStrength = 0.5f;
+        float toonHighlightStrength = 1.5f;
+
+        glm::vec3 toonShadowColor = glm::vec3(0.2f);
+        glm::vec3 toonLitColor = glm::vec3(1.0f);
+
+        glm::vec3 lightPosition = glm::vec3(0.0f, 5.0f, 0.0f);
+    };
 };

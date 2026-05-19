@@ -36,6 +36,7 @@ void ViewerApplication::Initialize()
     InitializeModel();
     InitializeCamera();
     InitializeLights();
+    LoadSettings(); //Load user-set settings
 
     DeviceGL& device = GetDevice();
     device.EnableFeature(GL_DEPTH_TEST);
@@ -262,9 +263,6 @@ void ViewerApplication::InitializeModel()
         m_model.GetMaterial(i).SetUniformValue("ColorTexture", colorTexture);
         m_model.GetMaterial(i).SetUniformValue("ToonRamp", toonRamp);
     }
-
-    //Load user-set settings
-    LoadSettings();
 
 }
     

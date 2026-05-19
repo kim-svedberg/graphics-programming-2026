@@ -159,25 +159,16 @@ void ViewerApplication::RebuildToonRamps()
 {
     for (size_t i = 0; i < m_model.GetMaterialCount(); i++)
     {
-        glm::vec3 baseColor(1.0f);
-
-        if (i == 0)
-            baseColor = glm::vec3(0.35f);
-        else if (i == 1)
-            baseColor = glm::vec3(0.4f, 0.8f, 0.35f);
-        else if (i == 2)
-            baseColor = glm::vec3(0.8f, 0.65f, 0.45f);
+        glm::vec3 baseColor = m_materialBaseColors[i];
 
         glm::vec3 shadowColor;
         glm::vec3 litColor;
 
-        if (m_useMaterialColorRamps)
-        {
+        if(m_useMaterialColorRamps){
             shadowColor = baseColor * m_toonShadowStrength;
             litColor = glm::min(baseColor * m_toonHighlightStrength, glm::vec3(1.0f));
         }
-        else
-        {
+        else{
             shadowColor = m_toonShadowColor;
             litColor = m_toonLitColor;
         }
@@ -243,13 +234,15 @@ void ViewerApplication::InitializeModel()
     Texture2DLoader textureLoader(TextureObject::FormatRGBA, TextureObject::InternalFormatRGBA8);
     textureLoader.SetFlipVertical(true);
     
-    //5.1 Load toon ramp texture
+    //Load toon ramp textures
     std::vector<std::string> texturePaths =
     {
         "models/mill/Ground_shadow.jpg",
         "models/mill/Ground_color.jpg",
         "models/mill/MillCat_color.jpg"
     };
+
+    m_materialBaseColors.clear();
 
     for (size_t i = 0; i < m_model.GetMaterialCount(); i++)
     {
@@ -258,9 +251,10 @@ void ViewerApplication::InitializeModel()
         auto colorTexture = textureLoader.LoadShared(texturePath.c_str());
 
         glm::vec3 baseColor = SampleAverageTextureColor(texturePath.c_str());
+        m_materialBaseColors.push_back(baseColor);
 
-        glm::vec3 shadowColor = baseColor * 0.35f;
-        glm::vec3 litColor = glm::min(baseColor * 1.25f, glm::vec3(1.0f));
+        glm::vec3 shadowColor = baseColor * m_toonShadowStrength;
+        glm::vec3 litColor = glm::min(baseColor * m_toonHighlightStrength, glm::vec3(1.0f));
 
         auto toonRamp = CreateToonRampTexture(shadowColor, litColor);
 
@@ -306,13 +300,36 @@ void ViewerApplication::RenderGUI()
 
     ImGui::Text("Toon Ramp");
     ImGui::Checkbox("Use material-based ramps", &m_useMaterialColorRamps);
-    /*ImGui::DragFloat("Shadow strength", &m_toonShadowStrength, 0.01f, 0.0f, 1.0f);
-    ImGui::DragFloat("Highlight strength", &m_toonHighlightStrength, 0.01f, 1.0f, 3.0f);*/
 
-    if (!m_useMaterialColorRamps)
+    bool rampChanged = false;
+
+    if (m_useMaterialColorRamps)
     {
-        ImGui::ColorEdit3("Shadow color", &m_toonShadowColor[0]);
-        ImGui::ColorEdit3("Lit color", &m_toonLitColor[0]);
+            rampChanged |= ImGui::DragFloat(
+            "Shadow multiplier",
+            &m_toonShadowStrength,
+            0.01f,
+            0.0f,
+            1.0f
+        );
+
+        rampChanged |= ImGui::DragFloat(
+            "Highlight multiplier",
+            &m_toonHighlightStrength,
+            0.01f,
+            1.0f,
+            3.0f
+        );
+    }
+    else {
+
+        rampChanged = rampChanged | ImGui::ColorEdit3("Shadow color", &m_toonShadowColor[0]);
+        rampChanged = rampChanged | ImGui::ColorEdit3("Lit color", &m_toonLitColor[0]);
+    }
+
+    if (rampChanged)
+    {
+        RebuildToonRamps();
     }
 
     ImGui::Separator();

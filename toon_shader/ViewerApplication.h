@@ -59,6 +59,7 @@ private:
     float m_specularExponentGrass;
 
     // Variables for toon shading 
+    std::vector<glm::vec3> m_materialBaseColors;
     glm::vec3 m_toonShadowColor = glm::vec3(0.15f);
     glm::vec3 m_toonLitColor = glm::vec3(1.0f);
     float m_toonShadowStrength = 0.35f;

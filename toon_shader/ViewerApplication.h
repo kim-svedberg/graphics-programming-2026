@@ -52,14 +52,8 @@ private:
     // Loaded model
     Model m_model;
 
-    // Add light variables
-    glm::vec3 m_ambientColor;
-    glm::vec3 m_lightColor;
-    float m_lightIntensity;
+    // Light variables
     glm::vec3 m_lightPosition;
-
-    // Specular exponent debug
-    float m_specularExponentGrass;
 
     // Variables for toon shading 
     std::vector<glm::vec3> m_materialBaseColors;

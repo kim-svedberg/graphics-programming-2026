@@ -18,11 +18,7 @@ ViewerApplication::ViewerApplication()
     , m_cameraEnabled(false)
     , m_cameraEnablePressed(false)
     , m_mousePosition(GetMainWindow().GetMousePosition(true))
-    , m_ambientColor(0.0f)
-    , m_lightColor(0.0f)
-    , m_lightIntensity(0.0f)
     , m_lightPosition(0.0f)
-    , m_specularExponentGrass(100.0f)
 {
 }
 
@@ -49,15 +45,6 @@ void ViewerApplication::Update()
 
     // Update camera controller
     UpdateCamera();
-
-    //Update eye position for all materials for toon shader
-    for (int i = 0; i < m_model.GetMaterialCount(); i++)
-{
-    m_model.GetMaterial(i).SetUniformValue(
-        "EyePosition",
-        m_cameraPosition
-    );
-}
 }
 
 void ViewerApplication::Render()
@@ -192,34 +179,23 @@ void ViewerApplication::InitializeModel()
     ShaderUniformCollection::NameSet filteredUniforms;
     filteredUniforms.insert("WorldMatrix");
     filteredUniforms.insert("ViewProjMatrix");
-    filteredUniforms.insert("AmbientColor");
-    filteredUniforms.insert("LightColor");
+    filteredUniforms.insert("LightPosition");
 
     // Create reference material
     std::shared_ptr<Material> material = std::make_shared<Material>(shaderProgram, filteredUniforms);
     material->SetUniformValue("Color", glm::vec4(1.0f));
-    material->SetUniformValue("AmbientReflection", 1.0f);
-    material->SetUniformValue("DiffuseReflection", 1.0f);
-    material->SetUniformValue("SpecularReflection", 1.0f);
-    material->SetUniformValue("SpecularExponent", 100.0f);
 
     // Setup function
     ShaderProgram::Location worldMatrixLocation = shaderProgram->GetUniformLocation("WorldMatrix");
     ShaderProgram::Location viewProjMatrixLocation = shaderProgram->GetUniformLocation("ViewProjMatrix");
-    ShaderProgram::Location ambientColorLocation = shaderProgram->GetUniformLocation("AmbientColor");
-    ShaderProgram::Location lightColorLocation = shaderProgram->GetUniformLocation("LightColor");
     ShaderProgram::Location lightPositionLocation = shaderProgram->GetUniformLocation("LightPosition");
-    ShaderProgram::Location cameraPositionLocation = shaderProgram->GetUniformLocation("CameraPosition");
     material->SetShaderSetupFunction([=](ShaderProgram& shaderProgram)
         {
             shaderProgram.SetUniform(worldMatrixLocation, glm::scale(glm::vec3(0.1f)));
             shaderProgram.SetUniform(viewProjMatrixLocation, m_camera.GetViewProjectionMatrix());
 
-            // Set camera and light uniforms
-            shaderProgram.SetUniform(ambientColorLocation, m_ambientColor);
-            shaderProgram.SetUniform(lightColorLocation, m_lightColor * m_lightIntensity);
+            // Set light uniform
             shaderProgram.SetUniform(lightPositionLocation, m_lightPosition);
-            shaderProgram.SetUniform(cameraPositionLocation, m_cameraPosition);
         });
 
     // Configure loader
@@ -280,9 +256,6 @@ void ViewerApplication::InitializeCamera()
 void ViewerApplication::InitializeLights()
 {
     // Initialize light variables
-    m_ambientColor = glm::vec3(0.25f);
-    m_lightColor = glm::vec3(1.0f);
-    m_lightIntensity = 1.0f;
     m_lightPosition = glm::vec3(-10.0f, 20.0f, 10.0f);
 }
 

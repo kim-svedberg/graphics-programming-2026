@@ -293,19 +293,21 @@ void ViewerApplication::RenderGUI()
 
     ImGui::Text("Lighting");
     ImGui::DragFloat3("Light position", &m_lightPosition[0], 0.1f);
-    /*ImGui::ColorEdit3("Light color", &m_lightColor[0]);
-    ImGui::DragFloat("Light intensity", &m_lightIntensity, 0.05f, 0.0f, 10.0f);*/
 
     ImGui::Separator();
 
     ImGui::Text("Toon Ramp");
-    ImGui::Checkbox("Use material-based ramps", &m_useMaterialColorRamps);
 
     bool rampChanged = false;
 
+    rampChanged |= ImGui::Checkbox(
+        "Use material-based ramps",
+        &m_useMaterialColorRamps
+    );
+
     if (m_useMaterialColorRamps)
     {
-            rampChanged |= ImGui::DragFloat(
+        rampChanged |= ImGui::DragFloat(
             "Shadow multiplier",
             &m_toonShadowStrength,
             0.01f,
@@ -321,10 +323,10 @@ void ViewerApplication::RenderGUI()
             3.0f
         );
     }
-    else {
-
-        rampChanged = rampChanged | ImGui::ColorEdit3("Shadow color", &m_toonShadowColor[0]);
-        rampChanged = rampChanged | ImGui::ColorEdit3("Lit color", &m_toonLitColor[0]);
+    else
+    {
+        rampChanged |= ImGui::ColorEdit3("Shadow color", &m_toonShadowColor[0]);
+        rampChanged |= ImGui::ColorEdit3("Lit color", &m_toonLitColor[0]);
     }
 
     if (rampChanged)
@@ -337,10 +339,6 @@ void ViewerApplication::RenderGUI()
     ImGui::Text("Debug");
     ImGui::Text("Current mode: %s", m_useMaterialColorRamps ? "Material ramps" : "Custom ramp");
     ImGui::Text("Toon coordinate: max(dot(N, L), 0)");
-
-    if(ImGui::Button("Rebuild Toon Ramps")){
-        RebuildToonRamps();
-    }
 
     m_imGui.EndFrame();
 }

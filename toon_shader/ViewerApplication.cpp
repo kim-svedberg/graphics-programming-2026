@@ -53,8 +53,33 @@ void ViewerApplication::Render()
 
     // Clear color and depth
     GetDevice().Clear(true, Color(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f);
+    auto shader = m_model.GetMaterial(0).GetShaderProgram();
+
+    shader->Bind();
+
+    shader->SetUniform(
+        shader->GetUniformLocation("ViewProjMatrix"),
+        m_camera.GetViewProjectionMatrix());
+
+    shader->SetUniform(
+        shader->GetUniformLocation("LightPosition"),
+        m_lightPosition);
+
+
+    // Draw mill
+    shader->SetUniform(
+        shader->GetUniformLocation("WorldMatrix"),
+        m_millTransform);
 
     m_model.Draw();
+
+
+    // Draw mario
+    shader->SetUniform(
+        shader->GetUniformLocation("WorldMatrix"),
+        m_marioTransform);
+
+    m_marioModel.Draw();
 
     // Render the debug user interface
     RenderGUI();
@@ -189,14 +214,14 @@ void ViewerApplication::InitializeModel()
     ShaderProgram::Location worldMatrixLocation = shaderProgram->GetUniformLocation("WorldMatrix");
     ShaderProgram::Location viewProjMatrixLocation = shaderProgram->GetUniformLocation("ViewProjMatrix");
     ShaderProgram::Location lightPositionLocation = shaderProgram->GetUniformLocation("LightPosition");
-    material->SetShaderSetupFunction([=](ShaderProgram& shaderProgram)
+    /*material->SetShaderSetupFunction([=](ShaderProgram& shaderProgram)
         {
             shaderProgram.SetUniform(worldMatrixLocation, glm::scale(glm::vec3(0.1f)));
             shaderProgram.SetUniform(viewProjMatrixLocation, m_camera.GetViewProjectionMatrix());
 
             // Set light uniform
             shaderProgram.SetUniform(lightPositionLocation, m_lightPosition);
-        });
+        }); */
 
     // Configure loader
     ModelLoader loader(material);
@@ -207,14 +232,30 @@ void ViewerApplication::InitializeModel()
 
     // Load model
     m_model = loader.Load("models/mill/Mill.obj");
+    m_marioModel = loader.Load("models/mario/Mario.obj");
 
     // Load and set textures
     Texture2DLoader textureLoader(TextureObject::FormatRGBA, TextureObject::InternalFormatRGBA8);
     textureLoader.SetFlipVertical(true);
     
     //Load toon ramp textures
-    std::vector<std::string> texturePaths =
+    std::vector<std::string> millTextures =
     {
+        "models/mill/Ground_shadow.jpg",
+        "models/mill/Ground_color.jpg",
+        "models/mill/MillCat_color.jpg"
+    };
+
+    std::vector<std::string> marioTextures =
+    {
+        /*"models/mario/brown.png"
+        "models/mario/clothes.png"
+        "models/mario/eye.png"
+        "models/mario/face.png"
+        "models/mario/gloves.png"
+        "models/mario/hair.png"
+        "models/mario/hat.png"
+        "models/mario/red.png"*/
         "models/mill/Ground_shadow.jpg",
         "models/mill/Ground_color.jpg",
         "models/mill/MillCat_color.jpg"
@@ -222,23 +263,36 @@ void ViewerApplication::InitializeModel()
 
     m_materialBaseColors.clear();
 
-    for (size_t i = 0; i < m_model.GetMaterialCount(); i++)
+    for (size_t i = 0; i < m_marioModel.GetMaterialCount(); i++)
     {
-        const std::string& texturePath = texturePaths[i];
+        auto colorTexture =
+            textureLoader.LoadShared(marioTextures[i].c_str());
 
-        auto colorTexture = textureLoader.LoadShared(texturePath.c_str());
+        glm::vec3 baseColor =
+            SampleAverageTextureColor(marioTextures[i].c_str());
 
-        glm::vec3 baseColor = SampleAverageTextureColor(texturePath.c_str());
-        m_materialBaseColors.push_back(baseColor);
+        auto toonRamp = CreateToonRampTexture(
+            baseColor * m_toonShadowStrength,
+            glm::min(baseColor * m_toonHighlightStrength,
+            glm::vec3(1.0f)));
 
-        glm::vec3 shadowColor = baseColor * m_toonShadowStrength;
-        glm::vec3 litColor = glm::min(baseColor * m_toonHighlightStrength, glm::vec3(1.0f));
+        m_marioModel.GetMaterial(i).SetUniformValue(
+            "ColorTexture",
+            colorTexture);
 
-        auto toonRamp = CreateToonRampTexture(shadowColor, litColor);
-
-        m_model.GetMaterial(i).SetUniformValue("ColorTexture", colorTexture);
-        m_model.GetMaterial(i).SetUniformValue("ToonRamp", toonRamp);
+        m_marioModel.GetMaterial(i).SetUniformValue(
+            "ToonRamp",
+            toonRamp);
     }
+
+    // Set transform of models 
+    m_millTransform =
+    glm::translate(glm::vec3(0.0f, 0.0f, 0.0f)) *
+    glm::scale(glm::vec3(0.1f));
+
+    m_marioTransform =
+    glm::translate(glm::vec3(5.0f, 0.0f, 0.0f)) *
+    glm::scale(glm::vec3(0.05f));
 
 }
     

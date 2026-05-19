@@ -51,6 +51,11 @@ private:
 
     // Loaded model
     Model m_model;
+    Model m_marioModel;
+
+    // Transforms
+    glm::mat4 m_millTransform;
+    glm::mat4 m_marioTransform;
 
     // Light variables
     glm::vec3 m_lightPosition;

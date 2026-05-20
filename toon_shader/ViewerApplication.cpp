@@ -34,6 +34,10 @@ void ViewerApplication::Initialize()
     // Initialize DearImGUI
     m_imGui.Initialize(GetMainWindow());
 
+     // Transparency
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     InitializeModel();
     InitializeCamera();
     InitializeLights();

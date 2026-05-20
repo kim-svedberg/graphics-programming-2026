@@ -13,5 +13,6 @@ add_executable(${TARGETNAME} ${target_inc} ${target_src} ${shaders}
     settings/SettingsManager.cpp
     render/ModelRenderer.cpp
     light/LightingSystem.cpp
-    camera/ToonCamera.cpp)
+    camera/ToonCamera.cpp
+    util/TextureUtils.cpp)
 target_link_libraries(${TARGETNAME} ${libraries})

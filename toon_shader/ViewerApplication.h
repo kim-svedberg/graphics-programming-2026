@@ -4,6 +4,9 @@
 
 #include "camera/ToonCamera.h"
 #include "light/LightingSystem.h"
+#include "util/TextureUtils.h"
+#include "render/ModelRenderer.h"
+#include "ui/ToonSettings.h"
 
 #include <ituGL/camera/Camera.h>
 #include <ituGL/geometry/Model.h>
@@ -26,13 +29,8 @@ protected:
     void Cleanup() override;
 
 private:
-    void InitializeModel();
-    void InitializeLights();
 
     void RenderGUI();
-
-    void ApplyToonShader(Model &model);
-    void RebuildToonRamps();
     void SaveSettings();
     void LoadSettings();
     void ResetSettings();
@@ -43,7 +41,7 @@ private:
     DearImGui m_imGui;
 
     // Loaded model
-    Model m_model;
+    ModelRenderer m_modelRenderer;
 
     // Camera
     ToonCamera m_mainCamera;
@@ -52,27 +50,10 @@ private:
     LightingSystem m_lightingSystem;
 
     //Textures for toon ramp
-    std::vector<std::string> texturePaths;
+    std::vector<std::string> m_texturePaths;
 
-    // Variables for toon shading 
-    std::vector<glm::vec3> m_materialBaseColors;
-    glm::vec3 m_toonShadowColor = glm::vec3(0.15f);
-    glm::vec3 m_toonLitColor = glm::vec3(1.0f);
-    float m_toonShadowStrength = 0.35f;
-    float m_toonHighlightStrength = 1.25f;
-    bool m_useMaterialColorRamps = true;
+    // Settings
+    ToonSettings m_settings;
 
-private:
-    struct ToonSettings
-    {
-        bool useMaterialColorRamps = true;
-
-        float toonShadowStrength = 0.5f;
-        float toonHighlightStrength = 1.5f;
-
-        glm::vec3 toonShadowColor = glm::vec3(0.2f);
-        glm::vec3 toonLitColor = glm::vec3(1.0f);
-
-        glm::vec3 lightPosition = glm::vec3(0.0f, 5.0f, 0.0f);
-    };
+    // Texture Util
 };

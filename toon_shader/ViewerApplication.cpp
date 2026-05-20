@@ -34,7 +34,8 @@ void ViewerApplication::Initialize()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     m_mainCamera.InitializeCamera(GetMainWindow());
-    InitializeModel();
+    m_modelRenderer.Initialize();
+    m_modelRenderer.LoadModel("models/miku/Default.obj");
     m_lightingSystem.InitializeLights();
     LoadSettings(); //Load user-set settings
 
@@ -58,7 +59,7 @@ void ViewerApplication::Render()
     // Clear color and depth
     GetDevice().Clear(true, Color(1.0f, 1.0f, 1.0f, 1.0f), true, 1.0f);
 
-    m_model.Draw();
+    m_modelRenderer.Render(m_mainCamera.GetCamera(), m_settings);
 
     // Render the debug user interface
     RenderGUI();
@@ -110,123 +111,6 @@ glm::vec3 SampleAverageTextureColor(const char* path)
     return averageColor;
 }
 
-std::shared_ptr<Texture2DObject> CreateToonRampTexture(
-    const glm::vec3& shadowColor,
-    const glm::vec3& litColor)
-{
-    auto texture = std::make_shared<Texture2DObject>();
-
-    std::vector<std::byte> pixels =
-    {
-    std::byte(static_cast<unsigned char>(glm::clamp(shadowColor.r, 0.0f, 1.0f) * 255.0f)),
-    std::byte(static_cast<unsigned char>(glm::clamp(shadowColor.g, 0.0f, 1.0f) * 255.0f)),
-    std::byte(static_cast<unsigned char>(glm::clamp(shadowColor.b, 0.0f, 1.0f) * 255.0f)),
-    std::byte(255),
-
-    std::byte(static_cast<unsigned char>(glm::clamp(litColor.r, 0.0f, 1.0f) * 255.0f)),
-    std::byte(static_cast<unsigned char>(glm::clamp(litColor.g, 0.0f, 1.0f) * 255.0f)),
-    std::byte(static_cast<unsigned char>(glm::clamp(litColor.b, 0.0f, 1.0f) * 255.0f)),
-    std::byte(255)
-    };
-
-    texture->Bind();
-
-    texture->SetImage(
-    0,
-    2,
-    1,
-    TextureObject::FormatRGBA,
-    TextureObject::InternalFormatRGBA8,
-    std::span<const std::byte>(pixels),
-    Data::Type::UByte);
-
-    texture->SetParameter(TextureObject::ParameterEnum::MinFilter, GL_NEAREST);
-    texture->SetParameter(TextureObject::ParameterEnum::MagFilter, GL_NEAREST);
-    texture->SetParameter(TextureObject::ParameterEnum::WrapS, GL_CLAMP_TO_EDGE);
-    texture->SetParameter(TextureObject::ParameterEnum::WrapT, GL_CLAMP_TO_EDGE);
-
-    return texture;
-}
-
-void ViewerApplication::RebuildToonRamps()
-{
-    for (size_t i = 0; i < m_model.GetMaterialCount(); i++)
-    {
-        glm::vec3 baseColor = m_materialBaseColors[i];
-
-        glm::vec3 shadowColor;
-        glm::vec3 litColor;
-
-        if(m_useMaterialColorRamps){
-            shadowColor = baseColor * m_toonShadowStrength;
-            litColor = glm::min(baseColor * m_toonHighlightStrength, glm::vec3(1.0f));
-        }
-        else{
-            shadowColor = m_toonShadowColor;
-            litColor = m_toonLitColor;
-        }
-
-        auto toonRamp = CreateToonRampTexture(shadowColor, litColor);
-        m_model.GetMaterial(i).SetUniformValue("ToonRamp", toonRamp);
-    }
-}
-
-void ViewerApplication::InitializeModel()
-{
-    //Load and build toon shader 
-    Shader vertexShader = ShaderLoader::Load(Shader::VertexShader, "shaders/toon.vert");
-    Shader fragmentShader = ShaderLoader::Load(Shader::FragmentShader, "shaders/toon.frag");
-    std::shared_ptr<ShaderProgram> shaderProgram = std::make_shared<ShaderProgram>();
-    shaderProgram->Build(vertexShader, fragmentShader);
-
-    // Filter out uniforms that are not material properties
-    ShaderUniformCollection::NameSet filteredUniforms;
-    filteredUniforms.insert("WorldMatrix");
-    filteredUniforms.insert("ViewProjMatrix");
-    filteredUniforms.insert("LightPosition");
-
-    // Create reference material
-    std::shared_ptr<Material> material = std::make_shared<Material>(shaderProgram, filteredUniforms);
-    material->SetUniformValue("Color", glm::vec4(1.0f));
-
-    // Setup function
-    ShaderProgram::Location worldMatrixLocation = shaderProgram->GetUniformLocation("WorldMatrix");
-    ShaderProgram::Location viewProjMatrixLocation = shaderProgram->GetUniformLocation("ViewProjMatrix");
-    ShaderProgram::Location lightPositionLocation = shaderProgram->GetUniformLocation("LightPosition");
-    material->SetShaderSetupFunction([=](ShaderProgram& shaderProgram)
-        {
-            shaderProgram.SetUniform(worldMatrixLocation, glm::scale(glm::vec3(0.1f)));
-            shaderProgram.SetUniform(viewProjMatrixLocation, m_mainCamera.GetCamera().GetViewProjectionMatrix());
-
-            // Set light uniform
-            shaderProgram.SetUniform(lightPositionLocation, m_lightingSystem.GetLightPosition());
-        });
-
-    // Configure loader
-    ModelLoader loader(material);
-    loader.SetCreateMaterials(true);
-    loader.SetMaterialAttribute(VertexAttribute::Semantic::Position, "VertexPosition");
-    loader.SetMaterialAttribute(VertexAttribute::Semantic::Normal, "VertexNormal");
-    loader.SetMaterialAttribute(VertexAttribute::Semantic::TexCoord0, "VertexTexCoord");
-
-    // Load models
-    loader.SetCreateMaterials(true);
-
-    loader.SetMaterialProperty(
-        ModelLoader::MaterialProperty::DiffuseTexture,
-        "ColorTexture"
-    );
-    
-    //m_model = loader.Load("models/mill/Mill.obj");
-    m_model = loader.Load("models/miku/Default.obj");
-
-    // Load and set textures
-    loader.GetTexture2DLoader().SetFlipVertical(true);
-
-   ApplyToonShader(m_model);
-
-}
-
 void ViewerApplication::SaveSettings()
 {
     std::ofstream file("toon_settings.txt");
@@ -236,18 +120,18 @@ void ViewerApplication::SaveSettings()
         return;
     }
 
-    file << m_useMaterialColorRamps << "\n";
+    file << m_settings.useMaterialColorRamps << "\n";
 
-    file << m_toonShadowStrength << "\n";
-    file << m_toonHighlightStrength << "\n";
+    file << m_settings.shadowStrength << "\n";
+    file << m_settings.highlightStrength << "\n";
 
-    file << m_toonShadowColor.r << " "
-         << m_toonShadowColor.g << " "
-         << m_toonShadowColor.b << "\n";
+    file << m_settings.shadowColor.r << " "
+         << m_settings.shadowColor.g << " "
+         << m_settings.shadowColor.b << "\n";
 
-    file << m_toonLitColor.r << " "
-         << m_toonLitColor.g << " "
-         << m_toonLitColor.b << "\n";
+    file << m_settings.litColor.r << " "
+         << m_settings.litColor.g << " "
+         << m_settings.litColor.b << "\n";
 
     file << m_lightingSystem.GetLightPosition().x << " "
          << m_lightingSystem.GetLightPosition().y << " "
@@ -263,39 +147,39 @@ void ViewerApplication::LoadSettings()
         return;
     }
 
-    file >> m_useMaterialColorRamps;
+    file >> m_settings.useMaterialColorRamps;
 
-    file >> m_toonShadowStrength;
-    file >> m_toonHighlightStrength;
+    file >> m_settings.shadowStrength;
+    file >> m_settings.highlightStrength;
 
-    file >> m_toonShadowColor.r
-         >> m_toonShadowColor.g
-         >> m_toonShadowColor.b;
+    file >> m_settings.shadowColor.r
+         >> m_settings.shadowColor.g
+         >> m_settings.shadowColor.b;
 
-    file >> m_toonLitColor.r
-         >> m_toonLitColor.g
-         >> m_toonLitColor.b;
+    file >> m_settings.litColor.r
+         >> m_settings.litColor.g
+         >> m_settings.litColor.b;
 
     glm::vec3 pos;
     file >> pos.x >> pos.y >> pos.z;
     m_lightingSystem.SetLightPosition(pos);
 
-    RebuildToonRamps();
+    m_modelRenderer.RebuildToonRamps(m_settings);
 }
 
 void ViewerApplication::ResetSettings()
 {
-    m_useMaterialColorRamps = true;
+    m_settings.useMaterialColorRamps = true;
 
-    m_toonShadowStrength = 0.5f;
-    m_toonHighlightStrength = 1.5f;
+    m_settings.shadowStrength = 0.5f;
+    m_settings.highlightStrength = 1.5f;
 
-    m_toonShadowColor = glm::vec3(0.2f);
-    m_toonLitColor = glm::vec3(1.0f);
+    m_settings.shadowColor = glm::vec3(0.2f);
+    m_settings.litColor = glm::vec3(1.0f);
 
     m_lightingSystem.SetLightPosition(glm::vec3(0.0f, 5.0f, 0.0f));
 
-    RebuildToonRamps();
+    m_modelRenderer.RebuildToonRamps(m_settings);
 }
 
 void ViewerApplication::RenderGUI()
@@ -316,14 +200,14 @@ void ViewerApplication::RenderGUI()
 
     rampChanged |= ImGui::Checkbox(
         "Use material-based ramps",
-        &m_useMaterialColorRamps
+        &m_settings.useMaterialColorRamps
     );
 
-    if (m_useMaterialColorRamps)
+    if (m_settings.useMaterialColorRamps)
     {
         rampChanged |= ImGui::DragFloat(
             "Shadow multiplier",
-            &m_toonShadowStrength,
+            &m_settings.shadowStrength,
             0.01f,
             0.0f,
             1.0f
@@ -331,7 +215,7 @@ void ViewerApplication::RenderGUI()
 
         rampChanged |= ImGui::DragFloat(
             "Highlight multiplier",
-            &m_toonHighlightStrength,
+            &m_settings.highlightStrength,
             0.01f,
             1.0f,
             3.0f
@@ -339,13 +223,13 @@ void ViewerApplication::RenderGUI()
     }
     else
     {
-        rampChanged |= ImGui::ColorEdit3("Shadow color", &m_toonShadowColor[0]);
-        rampChanged |= ImGui::ColorEdit3("Lit color", &m_toonLitColor[0]);
+        rampChanged |= ImGui::ColorEdit3("Shadow color", &m_settings.shadowColor[0]);
+        rampChanged |= ImGui::ColorEdit3("Lit color", &m_settings.litColor[0]);
     }
 
     if (rampChanged)
     {
-        RebuildToonRamps();
+        m_modelRenderer.RebuildToonRamps(m_settings);
     }
 
     ImGui::Separator();
@@ -365,27 +249,8 @@ void ViewerApplication::RenderGUI()
     ImGui::Separator();
 
     ImGui::Text("Debug");
-    ImGui::Text("Current mode: %s", m_useMaterialColorRamps ? "Material ramps" : "Custom ramp");
+    ImGui::Text("Current mode: %s", m_settings.useMaterialColorRamps ? "Material ramps" : "Custom ramp");
     ImGui::Text("Toon coordinate: max(dot(N, L), 0)");
 
     m_imGui.EndFrame();
-}
-
-void ViewerApplication::ApplyToonShader(Model &model)
-{
-     m_materialBaseColors.clear();
-
-    for (size_t i = 0; i < model.GetMaterialCount(); i++)
-    {
-        glm::vec3 baseColor = glm::vec3(1.0f); // fallback white
-
-        m_materialBaseColors.push_back(baseColor);
-
-        glm::vec3 shadowColor = baseColor * m_toonShadowStrength;
-        glm::vec3 litColor = glm::min(baseColor * m_toonHighlightStrength, glm::vec3(1.0f));
-
-        auto toonRamp = CreateToonRampTexture(shadowColor, litColor);
-
-        model.GetMaterial(i).SetUniformValue("ToonRamp", toonRamp);
-    }
 }

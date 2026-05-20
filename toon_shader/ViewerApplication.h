@@ -30,8 +30,7 @@ private:
 
     void RenderGUI();
 
-    void ApplyToonShader(Model &model, const std::vector<std::string> &texturePaths, Texture2DLoader textureLoader);
-
+    void ApplyToonShader(Model &model);
     void RebuildToonRamps();
     void SaveSettings();
     void LoadSettings();

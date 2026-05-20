@@ -211,23 +211,20 @@ void ViewerApplication::InitializeModel()
     loader.SetMaterialAttribute(VertexAttribute::Semantic::TexCoord0, "VertexTexCoord");
 
     // Load models
+    loader.SetCreateMaterials(true);
+
+    loader.SetMaterialProperty(
+        ModelLoader::MaterialProperty::DiffuseTexture,
+        "ColorTexture"
+    );
+    
     //m_model = loader.Load("models/mill/Mill.obj");
-    //m_mikuModel = loader.Load("models/miku/Default.obj");
     m_model = loader.Load("models/miku/Default.obj");
 
     // Load and set textures
-    Texture2DLoader textureLoader(TextureObject::FormatRGBA, TextureObject::InternalFormatRGBA8);
-    textureLoader.SetFlipVertical(true);
-    
-    //Load toon ramp textures
-    std::string dir = "models/miku";
-    for (const auto& entry : fs::directory_iterator(dir)) {
-        if (entry.is_regular_file() && entry.path().extension() == ".png") {
-            texturePaths.push_back(entry.path().string());
-        }
-    }
+    loader.GetTexture2DLoader().SetFlipVertical(true);
 
-   ApplyToonShader(m_model, texturePaths, textureLoader);
+   ApplyToonShader(m_model);
 
 }
     
@@ -392,17 +389,14 @@ void ViewerApplication::RenderGUI()
     m_imGui.EndFrame();
 }
 
-void ViewerApplication::ApplyToonShader(Model &model, const std::vector<std::string> &texturePaths, Texture2DLoader textureLoader)
+void ViewerApplication::ApplyToonShader(Model &model)
 {
-    m_materialBaseColors.clear();
+     m_materialBaseColors.clear();
 
-    for (size_t i = 0; i < m_model.GetMaterialCount(); i++)
+    for (size_t i = 0; i < model.GetMaterialCount(); i++)
     {
-        const std::string& texturePath = texturePaths[i];
+        glm::vec3 baseColor = glm::vec3(1.0f); // fallback white
 
-        auto colorTexture = textureLoader.LoadShared(texturePath.c_str());
-
-        glm::vec3 baseColor = SampleAverageTextureColor(texturePath.c_str());
         m_materialBaseColors.push_back(baseColor);
 
         glm::vec3 shadowColor = baseColor * m_toonShadowStrength;
@@ -410,8 +404,7 @@ void ViewerApplication::ApplyToonShader(Model &model, const std::vector<std::str
 
         auto toonRamp = CreateToonRampTexture(shadowColor, litColor);
 
-        m_model.GetMaterial(i).SetUniformValue("ColorTexture", colorTexture);
-        m_model.GetMaterial(i).SetUniformValue("ToonRamp", toonRamp);
+        model.GetMaterial(i).SetUniformValue("ToonRamp", toonRamp);
     }
 }
 

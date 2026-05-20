@@ -5,6 +5,8 @@
 #include <ituGL/camera/Camera.h>
 #include <ituGL/geometry/Model.h>
 #include <ituGL/utils/DearImGui.h>
+#include <ituGL/asset/Texture2DLoader.h>
+#include <ituGL/texture/Texture2DObject.h>
 
 class Texture2DObject;
 
@@ -27,6 +29,8 @@ private:
     void UpdateCamera();
 
     void RenderGUI();
+
+    void ApplyToonShader(Model &model, const std::vector<std::string> &texturePaths, Texture2DLoader textureLoader);
 
     void RebuildToonRamps();
     void SaveSettings();

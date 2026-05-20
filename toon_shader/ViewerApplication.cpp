@@ -220,25 +220,7 @@ void ViewerApplication::InitializeModel()
         "models/mill/MillCat_color.jpg"
     };
 
-    m_materialBaseColors.clear();
-
-    for (size_t i = 0; i < m_model.GetMaterialCount(); i++)
-    {
-        const std::string& texturePath = texturePaths[i];
-
-        auto colorTexture = textureLoader.LoadShared(texturePath.c_str());
-
-        glm::vec3 baseColor = SampleAverageTextureColor(texturePath.c_str());
-        m_materialBaseColors.push_back(baseColor);
-
-        glm::vec3 shadowColor = baseColor * m_toonShadowStrength;
-        glm::vec3 litColor = glm::min(baseColor * m_toonHighlightStrength, glm::vec3(1.0f));
-
-        auto toonRamp = CreateToonRampTexture(shadowColor, litColor);
-
-        m_model.GetMaterial(i).SetUniformValue("ColorTexture", colorTexture);
-        m_model.GetMaterial(i).SetUniformValue("ToonRamp", toonRamp);
-    }
+   ApplyToonShader(m_model, texturePaths, textureLoader);
 
 }
     
@@ -401,6 +383,29 @@ void ViewerApplication::RenderGUI()
     ImGui::Text("Toon coordinate: max(dot(N, L), 0)");
 
     m_imGui.EndFrame();
+}
+
+void ViewerApplication::ApplyToonShader(Model &model, const std::vector<std::string> &texturePaths, Texture2DLoader textureLoader)
+{
+     m_materialBaseColors.clear();
+
+    for (size_t i = 0; i < m_model.GetMaterialCount(); i++)
+    {
+        const std::string& texturePath = texturePaths[i];
+
+        auto colorTexture = textureLoader.LoadShared(texturePath.c_str());
+
+        glm::vec3 baseColor = SampleAverageTextureColor(texturePath.c_str());
+        m_materialBaseColors.push_back(baseColor);
+
+        glm::vec3 shadowColor = baseColor * m_toonShadowStrength;
+        glm::vec3 litColor = glm::min(baseColor * m_toonHighlightStrength, glm::vec3(1.0f));
+
+        auto toonRamp = CreateToonRampTexture(shadowColor, litColor);
+
+        m_model.GetMaterial(i).SetUniformValue("ColorTexture", colorTexture);
+        m_model.GetMaterial(i).SetUniformValue("ToonRamp", toonRamp);
+    }
 }
 
 void ViewerApplication::UpdateCamera()

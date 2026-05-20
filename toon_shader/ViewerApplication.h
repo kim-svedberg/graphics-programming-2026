@@ -59,6 +59,9 @@ private:
     // Light variables
     glm::vec3 m_lightPosition;
 
+    //Textures for toon ramp
+    std::vector<std::string> texturePaths;
+
     // Variables for toon shading 
     std::vector<glm::vec3> m_materialBaseColors;
     glm::vec3 m_toonShadowColor = glm::vec3(0.15f);

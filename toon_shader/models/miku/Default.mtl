@@ -1,0 +1,252 @@
+# Blender 3.6.5 MTL File: 'None'
+# www.blender.org
+
+newmtl 7_meshId0-name
+Ns 4.999998
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:/Users/OscarEduardo/Documents/Hatsune Miku series/Hatsune Miku Project Diva Dreamy Theater Extend/Hatsune Miku/Hatsune Miku Default/mikitm001_tex_6.png
+
+newmtl 7_meshId1-name
+Ns 4.999998
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:/Users/OscarEduardo/Documents/Hatsune Miku series/Hatsune Miku Project Diva Dreamy Theater Extend/Hatsune Miku/Hatsune Miku Default/mikitm001_tex_25.png
+
+newmtl 7_meshId10-name
+Ns 4.999998
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:/Users/OscarEduardo/Documents/Hatsune Miku series/Hatsune Miku Project Diva Dreamy Theater Extend/Hatsune Miku/Hatsune Miku Default/mikitm001_tex_9.png
+
+newmtl 7_meshId11-name
+Ns 4.999998
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:/Users/OscarEduardo/Documents/Hatsune Miku series/Hatsune Miku Project Diva Dreamy Theater Extend/Hatsune Miku/Hatsune Miku Default/mikitm001_tex_18.png
+
+newmtl 7_meshId12-name
+Ns 4.999998
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:/Users/OscarEduardo/Documents/Hatsune Miku series/Hatsune Miku Project Diva Dreamy Theater Extend/Hatsune Miku/Hatsune Miku Default/mikitm001_tex_32.png
+
+newmtl 7_meshId13-name
+Ns 4.999998
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:/Users/OscarEduardo/Documents/Hatsune Miku series/Hatsune Miku Project Diva Dreamy Theater Extend/Hatsune Miku/Hatsune Miku Default/mikitm001_tex_29.png
+
+newmtl 7_meshId14-name
+Ns 4.999998
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:/Users/OscarEduardo/Documents/Hatsune Miku series/Hatsune Miku Project Diva Dreamy Theater Extend/Hatsune Miku/Hatsune Miku Default/mikitm001_tex_4.png
+
+newmtl 7_meshId15-name
+Ns 4.999998
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:/Users/OscarEduardo/Documents/Hatsune Miku series/Hatsune Miku Project Diva Dreamy Theater Extend/Hatsune Miku/Hatsune Miku Default/mikitm001_tex_15.png
+
+newmtl 7_meshId2-name
+Ns 4.999998
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:/Users/OscarEduardo/Documents/Hatsune Miku series/Hatsune Miku Project Diva Dreamy Theater Extend/Hatsune Miku/Hatsune Miku Default/mikitm001_tex_28.png
+
+newmtl 7_meshId3-name
+Ns 4.999998
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:/Users/OscarEduardo/Documents/Hatsune Miku series/Hatsune Miku Project Diva Dreamy Theater Extend/Hatsune Miku/Hatsune Miku Default/mikitm001_tex_35.png
+
+newmtl 7_meshId4-name
+Ns 4.999998
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:/Users/OscarEduardo/Documents/Hatsune Miku series/Hatsune Miku Project Diva Dreamy Theater Extend/Hatsune Miku/Hatsune Miku Default/mikitm001_tex_12.png
+
+newmtl 7_meshId5-name
+Ns 4.999998
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:/Users/OscarEduardo/Documents/Hatsune Miku series/Hatsune Miku Project Diva Dreamy Theater Extend/Hatsune Miku/Hatsune Miku Default/mikitm001_tex_12.png
+
+newmtl 7_meshId6-name
+Ns 4.999998
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:/Users/OscarEduardo/Documents/Hatsune Miku series/Hatsune Miku Project Diva Dreamy Theater Extend/Hatsune Miku/Hatsune Miku Default/mikitm001_tex_22.png
+
+newmtl 7_meshId7-name
+Ns 4.999998
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:/Users/OscarEduardo/Documents/Hatsune Miku series/Hatsune Miku Project Diva Dreamy Theater Extend/Hatsune Miku/Hatsune Miku Default/mikitm001_tex_1.png
+
+newmtl 7_meshId8-name
+Ns 4.999998
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:/Users/OscarEduardo/Documents/Hatsune Miku series/Hatsune Miku Project Diva Dreamy Theater Extend/Hatsune Miku/Hatsune Miku Default/mikitm001_tex_12.png
+
+newmtl 7_meshId9-name
+Ns 4.999998
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:/Users/OscarEduardo/Documents/Hatsune Miku series/Hatsune Miku Project Diva Dreamy Theater Extend/Hatsune Miku/Hatsune Miku Default/mikitm001_tex_21.png
+
+newmtl Blush
+Ns 4.999998
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:/Users/OscarEduardo/Documents/Hatsune Miku series/Hatsune Miku Project Diva Dreamy Theater Extend/Hatsune Miku/Hatsune Miku Default/mikitm000_tex_5.png
+
+newmtl Eye.001
+Ns 4.999998
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:/Users/OscarEduardo/Documents/Hatsune Miku series/Hatsune Miku Project Diva Dreamy Theater Extend/Hatsune Miku/Hatsune Miku Default/mikitm000_tex_1.png
+
+newmtl Eyes_Head
+Ns 4.999998
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:/Users/OscarEduardo/Documents/Hatsune Miku series/Hatsune Miku Project Diva Dreamy Theater Extend/Hatsune Miku/Hatsune Miku Default/mikitm000_tex_5.png
+
+newmtl HR_Back
+Ns 4.999998
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:/Users/OscarEduardo/Documents/Hatsune Miku series/Hatsune Miku Project Diva Dreamy Theater Extend/Hatsune Miku/Hatsune Miku Default/mikitm500_tex_00.png
+
+newmtl HR_Front
+Ns 4.999998
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:/Users/OscarEduardo/Documents/Hatsune Miku series/Hatsune Miku Project Diva Dreamy Theater Extend/Hatsune Miku/Hatsune Miku Default/mikitm500_tex_04.png
+
+newmtl HR_Tail
+Ns 4.999998
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:/Users/OscarEduardo/Documents/Hatsune Miku series/Hatsune Miku Project Diva Dreamy Theater Extend/Hatsune Miku/Hatsune Miku Default/mikitm500_tex_08.png
+
+newmtl Head_Base
+Ns 4.999998
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:/Users/OscarEduardo/Documents/Hatsune Miku series/Hatsune Miku Project Diva Dreamy Theater Extend/Hatsune Miku/Hatsune Miku Default/mikitm000_tex_5.png
+
+newmtl Head_alt
+Ns 4.999998
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:/Users/OscarEduardo/Documents/Hatsune Miku series/Hatsune Miku Project Diva Dreamy Theater Extend/Hatsune Miku/Hatsune Miku Default/mikitm000_tex_5.png
+
+newmtl Mouth_Inside
+Ns 4.999998
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:/Users/OscarEduardo/Documents/Hatsune Miku series/Hatsune Miku Project Diva Dreamy Theater Extend/Hatsune Miku/Hatsune Miku Default/mikitm000_tex_5.png

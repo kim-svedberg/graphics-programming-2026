@@ -18,7 +18,7 @@ namespace fs = std::filesystem;
 ViewerApplication::ViewerApplication()
     : Application(1024, 1024, "Toon Shader Demo")
     , m_mainCamera(GetMainWindow())
-    , m_lightPosition(0.0f)
+    , m_lightingSystem(glm::vec3(0.0f))
 {
 }
 
@@ -35,7 +35,7 @@ void ViewerApplication::Initialize()
 
     m_mainCamera.InitializeCamera(GetMainWindow());
     InitializeModel();
-    InitializeLights();
+    m_lightingSystem.InitializeLights();
     LoadSettings(); //Load user-set settings
 
     DeviceGL& device = GetDevice();
@@ -199,7 +199,7 @@ void ViewerApplication::InitializeModel()
             shaderProgram.SetUniform(viewProjMatrixLocation, m_mainCamera.GetCamera().GetViewProjectionMatrix());
 
             // Set light uniform
-            shaderProgram.SetUniform(lightPositionLocation, m_lightPosition);
+            shaderProgram.SetUniform(lightPositionLocation, m_lightingSystem.GetLightPosition());
         });
 
     // Configure loader
@@ -226,13 +226,6 @@ void ViewerApplication::InitializeModel()
    ApplyToonShader(m_model);
 
 }
-    
-
-void ViewerApplication::InitializeLights()
-{
-    // Initialize light variables
-    m_lightPosition = glm::vec3(-10.0f, 20.0f, 10.0f);
-}
 
 void ViewerApplication::SaveSettings()
 {
@@ -256,9 +249,9 @@ void ViewerApplication::SaveSettings()
          << m_toonLitColor.g << " "
          << m_toonLitColor.b << "\n";
 
-    file << m_lightPosition.x << " "
-         << m_lightPosition.y << " "
-         << m_lightPosition.z << "\n";
+    file << m_lightingSystem.GetLightPosition().x << " "
+         << m_lightingSystem.GetLightPosition().y << " "
+         << m_lightingSystem.GetLightPosition().z << "\n";
 }
 
 void ViewerApplication::LoadSettings()
@@ -283,9 +276,9 @@ void ViewerApplication::LoadSettings()
          >> m_toonLitColor.g
          >> m_toonLitColor.b;
 
-    file >> m_lightPosition.x
-         >> m_lightPosition.y
-         >> m_lightPosition.z;
+    glm::vec3 pos;
+    file >> pos.x >> pos.y >> pos.z;
+    m_lightingSystem.SetLightPosition(pos);
 
     RebuildToonRamps();
 }
@@ -300,7 +293,7 @@ void ViewerApplication::ResetSettings()
     m_toonShadowColor = glm::vec3(0.2f);
     m_toonLitColor = glm::vec3(1.0f);
 
-    m_lightPosition = glm::vec3(0.0f, 5.0f, 0.0f);
+    m_lightingSystem.SetLightPosition(glm::vec3(0.0f, 5.0f, 0.0f));
 
     RebuildToonRamps();
 }
@@ -313,7 +306,7 @@ void ViewerApplication::RenderGUI()
     ImGui::Separator();
 
     ImGui::Text("Lighting");
-    ImGui::DragFloat3("Light position", &m_lightPosition[0], 0.1f);
+    ImGui::DragFloat3("Light position", &m_lightingSystem.GetLightPosition()[0], 0.1f);
 
     ImGui::Separator();
 

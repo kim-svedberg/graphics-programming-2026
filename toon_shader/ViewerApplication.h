@@ -3,6 +3,8 @@
 #include <ituGL/application/Application.h>
 
 #include "camera/ToonCamera.h"
+#include "light/LightingSystem.h"
+
 #include <ituGL/camera/Camera.h>
 #include <ituGL/geometry/Model.h>
 #include <ituGL/utils/DearImGui.h>
@@ -47,7 +49,7 @@ private:
     ToonCamera m_mainCamera;
 
     // Light variables
-    glm::vec3 m_lightPosition;
+    LightingSystem m_lightingSystem;
 
     //Textures for toon ramp
     std::vector<std::string> texturePaths;

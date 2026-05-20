@@ -7,6 +7,7 @@ namespace fs = std::filesystem;
 
 int main()
 {
+    // Fix broken .mtl file 
     std::string inputPath = "models/miku/Default.mtl";
 
     std::fstream inputFile(inputPath);
@@ -22,7 +23,6 @@ int main()
 
     while (std::getline(inputFile, line))
     {
-        // Only process texture lines
         if (line.rfind("map_Kd ", 0) == 0)
         {
             std::string fullPath = line.substr(7);
@@ -39,12 +39,9 @@ int main()
 
     inputFile.close();
 
-    // Overwrite original file
     std::ofstream outputFile(inputPath);
     outputFile << outputText;
     outputFile.close();
-
-    std::cout << "MTL paths fixed.\n";
 
     ViewerApplication viewerApplication;
     return viewerApplication.Run();

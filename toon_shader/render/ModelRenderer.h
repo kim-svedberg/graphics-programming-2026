@@ -8,7 +8,8 @@
 #include <ituGL/asset/Texture2DLoader.h>
 #include <ituGL/texture/Texture2DObject.h>
 #include <ituGL/shader/Material.h>
-#include "../ui/ToonUI.h"
+
+#include "../ui/ToonSettings.h"
 #include "../util/TextureUtils.h"
 
 class ModelRenderer {

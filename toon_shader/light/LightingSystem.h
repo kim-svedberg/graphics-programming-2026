@@ -1,3 +1,5 @@
+#pragma once
+
 #include <ituGL/application/Application.h>
 
 #include <ituGL/camera/Camera.h>

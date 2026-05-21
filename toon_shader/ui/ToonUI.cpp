@@ -1,4 +1,6 @@
 #include "ToonUI.h"
+#include "../render/ModelRenderer.h"
+
 
 
 void ToonUI::RenderGUI(LightingSystem& lightingSystem, ModelRenderer& modelRenderer, ToonSettings& settings)

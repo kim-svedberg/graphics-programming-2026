@@ -9,7 +9,7 @@
 #include <ituGL/texture/Texture2DObject.h>
 #include <ituGL/shader/Material.h>
 
-#include "../ui/ToonSettings.h"
+#include "../settings/ToonSettings.h"
 #include "../util/TextureUtils.h"
 
 class ModelRenderer {

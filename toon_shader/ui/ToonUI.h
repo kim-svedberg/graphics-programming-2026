@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ToonSettings.h"
+#include "../settings/ToonSettings.h"
 #include <ituGL/utils/DearImGui.h>
 #include "../light/LightingSystem.h"
 #include <imgui.h>

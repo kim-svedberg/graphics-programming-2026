@@ -6,7 +6,7 @@
 #include "light/LightingSystem.h"
 #include "util/TextureUtils.h"
 #include "render/ModelRenderer.h"
-#include "ui/ToonSettings.h"
+#include "settings/ToonSettings.h"
 #include "ui/ToonUI.h"
 
 #include <ituGL/camera/Camera.h>

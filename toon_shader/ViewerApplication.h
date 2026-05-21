@@ -31,13 +31,6 @@ protected:
     void Cleanup() override;
 
 private:
-
-    void SaveSettings();
-    void LoadSettings();
-    void ResetSettings();
-
-
-private:
     // Helper object for debug GUI
     DearImGui m_imGui;
 

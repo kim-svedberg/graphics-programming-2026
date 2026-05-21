@@ -1,8 +1,6 @@
 #include "LightingSystem.h"
 
-LightingSystem::LightingSystem(glm::vec3 startingValue){
-    m_lightPosition = startingValue;
-}
+LightingSystem::LightingSystem(){}
 
 void LightingSystem::InitializeLights(){
     

@@ -9,7 +9,7 @@
 class LightingSystem{
 
 public:
-    LightingSystem(glm::vec3 startingValue);
+    LightingSystem();
 
     void InitializeLights();
     const glm::vec3& GetLightPosition() const;

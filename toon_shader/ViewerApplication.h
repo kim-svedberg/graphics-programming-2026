@@ -7,6 +7,7 @@
 #include "util/TextureUtils.h"
 #include "render/ModelRenderer.h"
 #include "ui/ToonSettings.h"
+#include "ui/ToonUI.h"
 
 #include <ituGL/camera/Camera.h>
 #include <ituGL/geometry/Model.h>
@@ -51,5 +52,8 @@ private:
 
     // Settings
     ToonSettings m_settings;
+    
+    // UI 
+    ToonUI m_ui;
 
 };

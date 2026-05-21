@@ -18,7 +18,6 @@ namespace fs = std::filesystem;
 ViewerApplication::ViewerApplication()
     : Application(1024, 1024, "Toon Shader Demo")
     , m_mainCamera(GetMainWindow())
-    , m_lightingSystem(glm::vec3(0.0f))
 {
 }
 
@@ -62,7 +61,7 @@ void ViewerApplication::Render()
     m_modelRenderer.Render(m_mainCamera.GetCamera(), m_settings);
 
     // Render the debug user interface
-    RenderGUI();
+    m_ui.RenderGUI(m_lightingSystem, m_modelRenderer, m_settings);
 }
 
 void ViewerApplication::Cleanup()
@@ -142,82 +141,4 @@ void ViewerApplication::ResetSettings()
     m_lightingSystem.SetLightPosition(glm::vec3(0.0f, 5.0f, 0.0f));
 
     m_modelRenderer.RebuildToonRamps(m_settings);
-}
-
-void ViewerApplication::RenderGUI()
-{
-    m_imGui.BeginFrame();
-
-    ImGui::Text("Toon Shader Controls");
-    ImGui::Separator();
-
-    ImGui::Text("Lighting");
-    glm::vec3 lightPos = m_lightingSystem.GetLightPosition();
-
-    if (ImGui::DragFloat3("Light position", &lightPos[0], 0.1f))
-    {
-        m_lightingSystem.SetLightPosition(lightPos);
-        m_settings.lightPosition = lightPos;
-    }
-    ImGui::Separator();
-
-    ImGui::Text("Toon Ramp");
-
-    bool rampChanged = false;
-
-    rampChanged |= ImGui::Checkbox(
-        "Use default toon ramps",
-        &m_settings.useDefaultColorRamps
-    );
-
-    if (m_settings.useDefaultColorRamps)
-    {
-        rampChanged |= ImGui::DragFloat(
-            "Shadow multiplier",
-            &m_settings.shadowStrength,
-            0.01f,
-            0.0f,
-            1.0f
-        );
-
-        rampChanged |= ImGui::DragFloat(
-            "Highlight multiplier",
-            &m_settings.highlightStrength,
-            0.01f,
-            1.0f,
-            3.0f
-        );
-    }
-    else
-    {
-        rampChanged |= ImGui::ColorEdit3("Shadow color", &m_settings.shadowColor[0]);
-        rampChanged |= ImGui::ColorEdit3("Lit color", &m_settings.litColor[0]);
-    }
-
-    if (rampChanged)
-    {
-        m_modelRenderer.RebuildToonRamps(m_settings);
-    }
-
-    ImGui::Separator();
-
-    if (ImGui::Button("Save Settings"))
-    {
-        SaveSettings();
-    }
-
-    ImGui::SameLine();
-
-    if (ImGui::Button("Reset Defaults"))
-    {
-        ResetSettings();
-    }
-
-    ImGui::Separator();
-
-    ImGui::Text("Debug");
-    ImGui::Text("Current mode: %s", m_settings.useDefaultColorRamps ? "Material ramps" : "Custom ramp");
-    ImGui::Text("Toon coordinate: max(dot(N, L), 0)");
-
-    m_imGui.EndFrame();
 }

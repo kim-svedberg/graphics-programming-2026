@@ -25,9 +25,9 @@ void SettingsManager::SaveSettings(ToonSettings &settings, LightingSystem &light
          << settings.litColor.g << " "
          << settings.litColor.b << "\n";
 
-    file << lightingSystem.GetLightPosition().x << " "
-         << lightingSystem.GetLightPosition().y << " "
-         << lightingSystem.GetLightPosition().z << "\n";
+    file << settings.lightPosition.x << " "
+         << settings.lightPosition.y << " "
+         << settings.lightPosition.z << "\n";
     
     file << settings.outlineThickness << "\n";
 
@@ -60,6 +60,7 @@ void SettingsManager::LoadSettings(ToonSettings &settings, LightingSystem &light
     glm::vec3 pos;
     file >> pos.x >> pos.y >> pos.z;
     lightingSystem.SetLightPosition(pos);
+    settings.lightPosition = pos;
 
     file >> settings.outlineThickness;
 
@@ -79,7 +80,9 @@ void SettingsManager::ResetSettings(ToonSettings &settings, LightingSystem &ligh
     settings.shadowColor = glm::vec3(0.2f);
     settings.litColor = glm::vec3(1.0f);
 
-    lightingSystem.SetLightPosition(glm::vec3(0.0f, 5.0f, 0.0f));
+    glm::vec3 defaultLightPos = glm::vec3(0.0f, 5.0f, 0.0f);
+    lightingSystem.SetLightPosition(defaultLightPos);
+    settings.lightPosition = defaultLightPos;
 
     settings.outlineThickness = 0.05f;
     settings.outlineColor = glm::vec3(0.0f);

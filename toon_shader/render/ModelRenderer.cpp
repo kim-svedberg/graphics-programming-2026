@@ -20,10 +20,17 @@ void ModelRenderer::Initialize(){
     m_viewProjMatrixLocation = m_shaderProgram->GetUniformLocation("ViewProjMatrix");
     m_lightPositionLocation = m_shaderProgram->GetUniformLocation("LightPosition");
 
+    m_isOutlineLocation = m_shaderProgram->GetUniformLocation("IsOutline");
+    m_outlineThicknessLocation = m_shaderProgram->GetUniformLocation("OutlineThickness");
+    m_outlineColorLocation = m_shaderProgram->GetUniformLocation("OutlineColor");
+
     ShaderUniformCollection::NameSet filteredUniforms;
     filteredUniforms.insert("WorldMatrix");
     filteredUniforms.insert("ViewProjMatrix");
     filteredUniforms.insert("LightPosition");
+    filteredUniforms.insert("IsOutline");
+    filteredUniforms.insert("OutlineThickness");
+    filteredUniforms.insert("OutlineColor");
 
     m_material = std::make_shared<Material>(m_shaderProgram, filteredUniforms);
     m_material->SetUniformValue("Color", glm::vec4(1.0f));
@@ -56,9 +63,11 @@ void ModelRenderer::Render(
     ShaderProgram& shader = *m_shaderProgram;
     shader.Use();
 
+    glm::mat4 worldMatrix = glm::scale(glm::vec3(0.1f));
+
     shader.SetUniform(
         m_worldMatrixLocation,
-        glm::scale(glm::vec3(0.1f))
+        worldMatrix
     );
 
     shader.SetUniform(
@@ -71,7 +80,24 @@ void ModelRenderer::Render(
         settings.lightPosition
     );
 
+    // First pass: outline
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT);
+
+    shader.SetUniform(m_isOutlineLocation, 1);
+    shader.SetUniform(m_outlineThicknessLocation, 0.05f);
+    shader.SetUniform(m_outlineColorLocation, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+
     m_model.Draw();
+
+    // Second pass: normal toon model 
+    glCullFace(GL_BACK);
+
+    shader.SetUniform(m_isOutlineLocation, 0);
+
+    m_model.Draw();
+
+    glDisable(GL_CULL_FACE);
 }
 
 void ModelRenderer::ApplyToonShader()

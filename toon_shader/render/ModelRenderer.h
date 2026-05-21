@@ -31,5 +31,9 @@ private:
     ShaderProgram::Location m_worldMatrixLocation;
     ShaderProgram::Location m_viewProjMatrixLocation;
     ShaderProgram::Location m_lightPositionLocation;
+    
+    ShaderProgram::Location m_isOutlineLocation;
+    ShaderProgram::Location m_outlineThicknessLocation;
+    ShaderProgram::Location m_outlineColorLocation;
 
 };

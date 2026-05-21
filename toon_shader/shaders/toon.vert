@@ -11,9 +11,19 @@ uniform mat4 WorldMatrix;
 uniform mat4 ViewProjMatrix;
 uniform vec3 LightPosition;
 
+uniform int IsOutline;
+uniform float OutlineThickness;
+
 void main()
 {
-    vec3 worldPosition = (WorldMatrix * vec4(VertexPosition, 1.0)).xyz;
+    vec3 position = VertexPosition;
+
+    if (IsOutline == 1)
+    {
+        position += VertexNormal * OutlineThickness;
+    }
+
+    vec3 worldPosition = (WorldMatrix * vec4(position, 1.0)).xyz;
 
     mat3 normalMatrix = transpose(inverse(mat3(WorldMatrix)));
     vec3 worldNormal = normalize(normalMatrix * VertexNormal);

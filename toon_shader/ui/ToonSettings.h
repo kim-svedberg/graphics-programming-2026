@@ -4,7 +4,7 @@
 
 struct ToonSettings 
 {
-    bool useMaterialColorRamps;
+    bool useDefaultColorRamps;
     float shadowStrength;
     float highlightStrength;
     glm::vec3 shadowColor;

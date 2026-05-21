@@ -27,13 +27,11 @@ void ModelRenderer::Initialize(){
 
     m_material = std::make_shared<Material>(m_shaderProgram, filteredUniforms);
     m_material->SetUniformValue("Color", glm::vec4(1.0f));
-
-    ApplyToonShader();
 }
 
 void ModelRenderer::LoadModel(const char* path){
     ModelLoader loader(m_material);
-
+    
     loader.SetCreateMaterials(true);
     loader.SetMaterialAttribute(VertexAttribute::Semantic::Position, "VertexPosition");
     loader.SetMaterialAttribute(VertexAttribute::Semantic::Normal, "VertexNormal");
@@ -45,8 +43,10 @@ void ModelRenderer::LoadModel(const char* path){
     );
 
     loader.GetTexture2DLoader().SetFlipVertical(true);
-
     m_model = loader.Load(path);
+
+    ApplyToonShader();
+
 }
 
 void ModelRenderer::Render(
@@ -54,6 +54,7 @@ void ModelRenderer::Render(
 )
 {
     ShaderProgram& shader = *m_shaderProgram;
+    shader.Use();
 
     shader.SetUniform(
         m_worldMatrixLocation,
@@ -77,10 +78,11 @@ void ModelRenderer::ApplyToonShader()
 {
     for (size_t i = 0; i < m_model.GetMaterialCount(); i++)
     {
-        glm::vec3 baseColor(1.0f);
+        glm::vec3 baseColor(0.5f);
 
-        glm::vec3 shadowColor = baseColor * 0.5f;
-        glm::vec3 litColor = glm::min(baseColor * 1.5f, glm::vec3(1.0f));
+        m_materialBaseColors.push_back(baseColor);
+        glm::vec3 shadowColor = glm::vec3(0.0); //black 
+        glm::vec3 litColor = glm::vec3(1.0); // white
 
         auto toonRamp = CreateToonRampTexture(shadowColor, litColor);
 
@@ -96,7 +98,7 @@ void ModelRenderer::RebuildToonRamps(const ToonSettings& settings){
         glm::vec3 shadowColor;
         glm::vec3 litColor;
 
-        if (settings.useMaterialColorRamps)
+        if (settings.useDefaultColorRamps)
         {
             shadowColor = baseColor * settings.shadowStrength;
             litColor = glm::min(

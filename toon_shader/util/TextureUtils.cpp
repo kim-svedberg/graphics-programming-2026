@@ -39,3 +39,4 @@ std::shared_ptr<Texture2DObject> CreateToonRampTexture(
 
     return texture;
 }
+

@@ -49,11 +49,7 @@ private:
     // Light variables
     LightingSystem m_lightingSystem;
 
-    //Textures for toon ramp
-    std::vector<std::string> m_texturePaths;
-
     // Settings
     ToonSettings m_settings;
 
-    // Texture Util
 };

@@ -11,8 +11,6 @@
 #include "../ui/ToonUI.h"
 #include "../util/TextureUtils.h"
 
-
-
 class ModelRenderer {
 
 public:
@@ -32,4 +30,5 @@ private:
     ShaderProgram::Location m_worldMatrixLocation;
     ShaderProgram::Location m_viewProjMatrixLocation;
     ShaderProgram::Location m_lightPositionLocation;
+
 };

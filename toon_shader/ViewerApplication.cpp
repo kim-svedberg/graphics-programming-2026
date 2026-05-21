@@ -73,44 +73,6 @@ void ViewerApplication::Cleanup()
     Application::Cleanup();
 }
 
-glm::vec3 SampleAverageTextureColor(const char* path)
-{
-    int width = 0;
-    int height = 0;
-    int channels = 0;
-
-    stbi_set_flip_vertically_on_load(true);
-
-    unsigned char* data = stbi_load(path, &width, &height, &channels, 4);
-
-    if (!data)
-    {
-        return glm::vec3(1.0f); // fallback white
-    }
-
-    glm::vec3 averageColor(0.0f);
-    int pixelCount = width * height;
-
-    for (int i = 0; i < pixelCount; i++)
-    {
-        int index = i * 4;
-
-        glm::vec3 pixelColor(
-            data[index + 0] / 255.0f,
-            data[index + 1] / 255.0f,
-            data[index + 2] / 255.0f
-        );
-
-        averageColor += pixelColor;
-    }
-
-    averageColor /= float(pixelCount);
-
-    stbi_image_free(data);
-
-    return averageColor;
-}
-
 void ViewerApplication::SaveSettings()
 {
     std::ofstream file("toon_settings.txt");
@@ -120,7 +82,7 @@ void ViewerApplication::SaveSettings()
         return;
     }
 
-    file << m_settings.useMaterialColorRamps << "\n";
+    file << m_settings.useDefaultColorRamps << "\n";
 
     file << m_settings.shadowStrength << "\n";
     file << m_settings.highlightStrength << "\n";
@@ -147,7 +109,7 @@ void ViewerApplication::LoadSettings()
         return;
     }
 
-    file >> m_settings.useMaterialColorRamps;
+    file >> m_settings.useDefaultColorRamps;
 
     file >> m_settings.shadowStrength;
     file >> m_settings.highlightStrength;
@@ -169,7 +131,7 @@ void ViewerApplication::LoadSettings()
 
 void ViewerApplication::ResetSettings()
 {
-    m_settings.useMaterialColorRamps = true;
+    m_settings.useDefaultColorRamps = true;
 
     m_settings.shadowStrength = 0.5f;
     m_settings.highlightStrength = 1.5f;
@@ -190,8 +152,13 @@ void ViewerApplication::RenderGUI()
     ImGui::Separator();
 
     ImGui::Text("Lighting");
-    ImGui::DragFloat3("Light position", &m_lightingSystem.GetLightPosition()[0], 0.1f);
+    glm::vec3 lightPos = m_lightingSystem.GetLightPosition();
 
+    if (ImGui::DragFloat3("Light position", &lightPos[0], 0.1f))
+    {
+        m_lightingSystem.SetLightPosition(lightPos);
+        m_settings.lightPosition = lightPos;
+    }
     ImGui::Separator();
 
     ImGui::Text("Toon Ramp");
@@ -199,11 +166,11 @@ void ViewerApplication::RenderGUI()
     bool rampChanged = false;
 
     rampChanged |= ImGui::Checkbox(
-        "Use material-based ramps",
-        &m_settings.useMaterialColorRamps
+        "Use default toon ramps",
+        &m_settings.useDefaultColorRamps
     );
 
-    if (m_settings.useMaterialColorRamps)
+    if (m_settings.useDefaultColorRamps)
     {
         rampChanged |= ImGui::DragFloat(
             "Shadow multiplier",
@@ -249,7 +216,7 @@ void ViewerApplication::RenderGUI()
     ImGui::Separator();
 
     ImGui::Text("Debug");
-    ImGui::Text("Current mode: %s", m_settings.useMaterialColorRamps ? "Material ramps" : "Custom ramp");
+    ImGui::Text("Current mode: %s", m_settings.useDefaultColorRamps ? "Material ramps" : "Custom ramp");
     ImGui::Text("Toon coordinate: max(dot(N, L), 0)");
 
     m_imGui.EndFrame();

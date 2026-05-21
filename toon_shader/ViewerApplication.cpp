@@ -61,7 +61,7 @@ void ViewerApplication::Render()
     m_modelRenderer.Render(m_mainCamera.GetCamera(), m_settings);
 
     // Render the debug user interface
-    m_ui.RenderGUI(m_lightingSystem, m_modelRenderer, m_settings);
+    m_ui.RenderGUI(m_lightingSystem, m_modelRenderer, m_settings, m_settingsManager);
 }
 
 void ViewerApplication::Cleanup()

@@ -5,7 +5,7 @@
 
 
 
-void ToonUI::RenderGUI(LightingSystem& lightingSystem, ModelRenderer& modelRenderer, ToonSettings& settings)
+void ToonUI::RenderGUI(LightingSystem& lightingSystem, ModelRenderer& modelRenderer, ToonSettings& settings, SettingsManager& settingsManager)
 {
     m_imGui.BeginFrame();
 
@@ -64,14 +64,14 @@ void ToonUI::RenderGUI(LightingSystem& lightingSystem, ModelRenderer& modelRende
 
     if (ImGui::Button("Save Settings"))
     {
-        m_settingsManager.SaveSettings(settings, lightingSystem);
+        settingsManager.SaveSettings(settings, lightingSystem);
     }
 
     ImGui::SameLine();
 
     if (ImGui::Button("Reset Defaults"))
     {
-        m_settingsManager.ResetSettings(settings, lightingSystem, modelRenderer);
+        settingsManager.ResetSettings(settings, lightingSystem, modelRenderer);
     }
 
     ImGui::Separator();

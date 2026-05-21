@@ -12,12 +12,9 @@ class ToonUI {
 private:
 
 public:
-    void RenderGUI(LightingSystem& lightingSystem, ModelRenderer& modelRenderer, ToonSettings& settings);
+    void RenderGUI(LightingSystem& lightingSystem, ModelRenderer& modelRenderer, ToonSettings& settings, SettingsManager& settingsManager);
 
 private:
     // Helper object for debug GUI
     DearImGui m_imGui;
-
-    SettingsManager m_settingsManager;
-    
 };

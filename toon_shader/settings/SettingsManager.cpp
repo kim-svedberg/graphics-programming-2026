@@ -28,6 +28,12 @@ void SettingsManager::SaveSettings(ToonSettings &settings, LightingSystem &light
     file << lightingSystem.GetLightPosition().x << " "
          << lightingSystem.GetLightPosition().y << " "
          << lightingSystem.GetLightPosition().z << "\n";
+    
+    file << settings.outlineThickness << "\n";
+
+    file << settings.outlineColor.r << " "
+         << settings.outlineColor.g << " "
+         << settings.outlineColor.b << "\n";
 }
 
 void SettingsManager::LoadSettings(ToonSettings &settings, LightingSystem &lightingSystem, ModelRenderer &modelRenderer){
@@ -55,6 +61,12 @@ void SettingsManager::LoadSettings(ToonSettings &settings, LightingSystem &light
     file >> pos.x >> pos.y >> pos.z;
     lightingSystem.SetLightPosition(pos);
 
+    file >> settings.outlineThickness;
+
+    file >> settings.outlineColor.r
+         >> settings.outlineColor.g
+         >> settings.outlineColor.b;
+
     modelRenderer.RebuildToonRamps(settings);
 }
 
@@ -68,6 +80,9 @@ void SettingsManager::ResetSettings(ToonSettings &settings, LightingSystem &ligh
     settings.litColor = glm::vec3(1.0f);
 
     lightingSystem.SetLightPosition(glm::vec3(0.0f, 5.0f, 0.0f));
+
+    settings.outlineThickness = 0.05f;
+    settings.outlineColor = glm::vec3(0.0f);
 
     modelRenderer.RebuildToonRamps(settings);
 }

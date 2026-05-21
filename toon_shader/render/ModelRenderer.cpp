@@ -60,10 +60,12 @@ void ModelRenderer::Render(
     const Camera& camera, const ToonSettings& settings
 )
 {
+    float modelScale = 0.1f;
+    
     ShaderProgram& shader = *m_shaderProgram;
     shader.Use();
 
-    glm::mat4 worldMatrix = glm::scale(glm::vec3(0.1f));
+    glm::mat4 worldMatrix = glm::scale(glm::vec3(modelScale));
 
     shader.SetUniform(
         m_worldMatrixLocation,
@@ -85,8 +87,8 @@ void ModelRenderer::Render(
     glCullFace(GL_FRONT);
 
     shader.SetUniform(m_isOutlineLocation, 1);
-    shader.SetUniform(m_outlineThicknessLocation, 0.05f);
-    shader.SetUniform(m_outlineColorLocation, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+    shader.SetUniform(m_outlineThicknessLocation, settings.outlineThickness / modelScale);
+    shader.SetUniform(m_outlineColorLocation, glm::vec4(settings.outlineColor, 1.0f));
 
     m_model.Draw();
 

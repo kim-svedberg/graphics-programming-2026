@@ -59,6 +59,23 @@ void ToonUI::RenderGUI(LightingSystem& lightingSystem, ModelRenderer& modelRende
     {
         modelRenderer.RebuildToonRamps(settings);
     }
+    
+    ImGui::Separator();
+
+    ImGui::Text("Outline");
+
+    ImGui::DragFloat(
+        "Outline thickness",
+        &settings.outlineThickness,
+        0.001f,
+        0.0f,
+        0.2f
+    );
+
+    ImGui::ColorEdit3(
+        "Outline color",
+        &settings.outlineColor[0]
+    );
 
     ImGui::Separator();
 

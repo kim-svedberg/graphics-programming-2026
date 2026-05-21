@@ -5,6 +5,8 @@
 struct ToonSettings 
 {
     bool useDefaultColorRamps;
+    float outlineThickness;
+    glm::vec3 outlineColor;
     float shadowStrength;
     float highlightStrength;
     glm::vec3 shadowColor;

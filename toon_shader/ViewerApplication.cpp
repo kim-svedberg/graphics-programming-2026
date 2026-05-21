@@ -34,7 +34,7 @@ void ViewerApplication::Initialize()
 
     m_mainCamera.InitializeCamera(GetMainWindow());
     m_modelRenderer.Initialize();
-    m_modelRenderer.LoadModel("models/miku/Default.obj");
+    m_modelRenderer.LoadModel("models/mill/Mill.obj"); // change to "models/miku/Default.obj" for Miku model
     m_lightingSystem.InitializeLights();
     m_settingsManager.LoadSettings(m_settings, m_lightingSystem, m_modelRenderer); //Load user-set settings
 

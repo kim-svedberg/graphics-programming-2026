@@ -95,7 +95,5 @@ void ToonUI::RenderGUI(LightingSystem& lightingSystem, ModelRenderer& modelRende
 
     ImGui::Text("Debug");
     ImGui::Text("Current mode: %s", settings.useDefaultColorRamps ? "Material ramps" : "Custom ramp");
-    ImGui::Text("Toon coordinate: max(dot(N, L), 0)");
-
     m_imGui.EndFrame();
 }

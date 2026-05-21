@@ -36,7 +36,7 @@ void ViewerApplication::Initialize()
     m_modelRenderer.Initialize();
     m_modelRenderer.LoadModel("models/miku/Default.obj");
     m_lightingSystem.InitializeLights();
-    LoadSettings(); //Load user-set settings
+    m_settingsManager.LoadSettings(m_settings, m_lightingSystem, m_modelRenderer); //Load user-set settings
 
     DeviceGL& device = GetDevice();
     device.EnableFeature(GL_DEPTH_TEST);

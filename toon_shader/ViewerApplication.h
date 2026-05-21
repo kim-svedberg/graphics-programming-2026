@@ -8,6 +8,7 @@
 #include "render/ModelRenderer.h"
 #include "settings/ToonSettings.h"
 #include "ui/ToonUI.h"
+#include "settings/SettingsManager.h"
 
 #include <ituGL/camera/Camera.h>
 #include <ituGL/geometry/Model.h>
@@ -31,7 +32,6 @@ protected:
 
 private:
 
-    void RenderGUI();
     void SaveSettings();
     void LoadSettings();
     void ResetSettings();
@@ -55,5 +55,8 @@ private:
     
     // UI 
     ToonUI m_ui;
+
+    // Settings
+    SettingsManager m_settingsManager;
 
 };

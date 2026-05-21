@@ -6,6 +6,7 @@
 #include <imgui.h>
 
 class ModelRenderer;
+class SettingsManager;
 
 class ToonUI {
 private:
@@ -16,4 +17,7 @@ public:
 private:
     // Helper object for debug GUI
     DearImGui m_imGui;
+
+    SettingsManager m_settingsManager;
+    
 };

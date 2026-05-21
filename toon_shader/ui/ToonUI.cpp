@@ -1,5 +1,7 @@
 #include "ToonUI.h"
 #include "../render/ModelRenderer.h"
+#include "../settings/SettingsManager.h"
+
 
 
 
@@ -62,14 +64,14 @@ void ToonUI::RenderGUI(LightingSystem& lightingSystem, ModelRenderer& modelRende
 
     if (ImGui::Button("Save Settings"))
     {
-        //SaveSettings();
+        m_settingsManager.SaveSettings(settings, lightingSystem);
     }
 
     ImGui::SameLine();
 
     if (ImGui::Button("Reset Defaults"))
     {
-        //ResetSettings();
+        m_settingsManager.ResetSettings(settings, lightingSystem, modelRenderer);
     }
 
     ImGui::Separator();
